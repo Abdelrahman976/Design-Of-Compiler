@@ -1,0 +1,3 @@
+D:/Semester 6/Design of Compilers/Project/MainProject/cmake-build-debug/CMakeFiles/MainProject.dir
+D:/Semester 6/Design of Compilers/Project/MainProject/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Semester 6/Design of Compilers/Project/MainProject/cmake-build-debug/CMakeFiles/rebuild_cache.dir

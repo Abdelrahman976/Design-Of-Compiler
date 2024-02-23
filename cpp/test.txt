@@ -1,33 +1,81 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_NAME_LEN 50
+#define MAX_STUDENTS 100
+
+// Define a structure to hold student information
+typedef struct {
+    char='a';
+    int id;
+    char name[MAX_NAME_LEN];
+    float gpa;
+} Student;
+
+// Function prototypes
+void addStudent(Student **students, int *count, int id, const char *name, float gpa);
+Student *findStudent(Student **students, int count, int id);
+void displayStudent(const Student *student);
+void displayAllStudents(Student **students, int count);
 
 int main() {
+    Student *students[MAX_STUDENTS];
+    int studentCount = 0;
 
- int num, i, flag = 0;
+    // Add some students
+    addStudent(students, &studentCount, 1, "John Doe", 3.5);
+    addStudent(students, &studentCount, 2, "Jane Doe", 3.8);
 
- printf("Enter a number: ");
+    // Find a student by ID
+    Student *s = findStudent(students, studentCount, 1);
+    if (s != NULL) {
+        printf("Student found:\n");
+        displayStudent(s);
+    } else {
+        printf("Student not found.\n");
+    }
 
- scanf("%d", &num);
+    // Display all students
+    displayAllStudents(students, studentCount);
 
- for (i = 2; i <= num / 2; ++i) {
+    // Free allocated memory
+    for (int i = 0; i < studentCount; i++) {
+        free(students[i]);
+    }
 
- if (num % i == 0) {
+    return 0;
+}
 
- flag = 1;
+void addStudent(Student **students, int *count, int id, const char *name, float gpa) {
+    if (*count >= MAX_STUDENTS) {
+        printf("Maximum number of students reached.\n");
+        return;
+    }
+    Student *newStudent = (Student *)malloc(sizeof(Student));
+    newStudent->id = id;
+    strncpy(newStudent->name, name, MAX_NAME_LEN);
+    newStudent->name[MAX_NAME_LEN - 1] = '\0';
+    newStudent->gpa = gpa;
+    students[(*count)++] = newStudent;
+}
 
- break;
+Student *findStudent(Student **students, int count, int id) {
+    for (int i = 0; i < count; i++) {
+        if (students[i]->id == id) {
+            return students[i];
+        }
+    }
+    return NULL;
+}
 
- }
+void displayStudent(const Student *student) {
+    printf("ID: %d, Name: %s, GPA: %.2f\n", student->id, student->name, student->gpa);
+}
 
- }
-
- if (flag == 0)
-
- printf("%d is a prime number.\n", num);
-
- else
-
- printf("%d is not a prime number.\n", num);
-\n
- return 0;
-
- }
+void displayAllStudents(Student **students, int count) {
+    printf("All students:\n");
+    for (int i = 0; i <= count; i++) {
+        displayStudent.students[i];//huhuhuu
+    }
+}

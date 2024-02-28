@@ -66,9 +66,9 @@ public class LexicalAnalyzer {
             //printTokens(temp2);
             Pattern operatorPattern = Pattern.compile("#|[_a-zA-Z]+[0-9]*|\\*|>>=?|<<=?|==|=|!=|->|<=|>=|&&|[/%&|.!^<>]|\\|\\||\\+\\+|\\+|[-+]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]\\.[0-9]|--|-|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>");
             OperatorPattern(operatorPattern,temp2);
-            for (int i = 0; i < lexemes.size(); i++) {
-                System.out.println(lexemes.get(i));
-            }
+//            for (int i = 0; i < lexemes.size(); i++) {
+//                System.out.println(lexemes.get(i));
+//            }
         }
         catch (IOException e) {
             System.out.println("Error opening input file: " + e.getMessage());
@@ -177,7 +177,7 @@ public class LexicalAnalyzer {
 //        for(int i=0;i<analyzer.tokens.size();i++){
 //            System.out.println(analyzer.tokens.get(i).Lexeme );
 //        }
-        //analyzer.printTokens();
+        analyzer.printTokens();
 
     }
 }

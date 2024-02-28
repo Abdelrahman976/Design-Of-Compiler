@@ -1,3 +1,4 @@
+struct person{};
 enum TokenType {
   KEYWORD,
   IDENTIFIER,

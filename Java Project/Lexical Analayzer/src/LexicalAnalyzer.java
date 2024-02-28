@@ -7,20 +7,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LexicalAnalyzer {
-    private class Node {
-        String name;
-        String type;
+    private class Token {
+        String Lexeme;
+        String Tokentype;
+        String IdType;
         int index;
 
-        Node(String name, String type) {
-            this.name = name;
-            this.type = type;
+        Token(String name, String type) {
+            this.Lexeme = name;
+            this.Tokentype = type;
             this.index = -1;
         }
 
-        Node(String name, String type, int index) {
-            this.name = name;
-            this.type = type;
+        Token(String name, String type, int index) {
+            this.Lexeme = name;
+            this.Tokentype = type;
             this.index = index;
         }
     }
@@ -38,7 +39,7 @@ public class LexicalAnalyzer {
         }
     }
 
-    private List<Node> tokens = new ArrayList<>();
+    private List<Token> tokens = new ArrayList<>();
     private List<String> lexemes = new ArrayList<>();
     public void tokenize(String directory) {
         try (BufferedReader infile = new BufferedReader(new FileReader(directory))) {
@@ -54,75 +55,129 @@ public class LexicalAnalyzer {
                 }
                 temp2.add(line);
             }
-            //printTokens(temp2);
             // Pattern for spaces and semicolons and literals
             Pattern spaceSemiColonPattern = Pattern.compile("\"[^\"]*\"|[^ \"]+|\\n$");
-            for (String token : temp2) {
-                Matcher literalMatcher = spaceSemiColonPattern.matcher(token);
-                while (literalMatcher.find()) {
-                    String match = literalMatcher.group();
-                    temp1.add(match); // Assuming typeOf for literals is "literal"
-                }
-            }
+            temp1 = TokenizeHelper(spaceSemiColonPattern,temp2,temp1);
             temp2.clear();
-
             //printTokens(temp1);
             Pattern punctPattern = Pattern.compile("(\"[^\"]*\")|([()\\[\\]{},;?])|[^()\\[\\]{},;?\s]+");
-            for (String token : temp1) {
-                Matcher matcher = punctPattern.matcher(token);
-                while (matcher.find()) {
-                    String match = matcher.group();
-                    temp2.add(match); // Assuming typeOf for literals is "literal"
-                }
-            }
+            temp2 = TokenizeHelper(punctPattern,temp1,temp2);
             temp1.clear();
-            //printTokens(temp2); // Make sure you have implemented this method
-            Pattern operatorPattern = Pattern.compile("#|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|[0-9]\\.[0-9]|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-*/%&|.!^=<>]+");
-            for (String token : temp2) {
-                if (token.startsWith("\"")) {
-                    // If the token starts with a double quote, add it to temp3 directly without modification
-                    lexemes.add(token);
-                } else {
-                    Matcher matcher = operatorPattern.matcher(token);
-                    int lastEnd = 0;
-                    while (matcher.find()) {
-                        if (matcher.start() > lastEnd) {
-                            // Add non-operator token that precedes the operator
-                            lexemes.add(token.substring(lastEnd, matcher.start()));
-                        }
-                        // Add the operator token
-                        lexemes.add(matcher.group());
-                        lastEnd = matcher.end();
-                    }
-                    // Add any remaining text after the last match as a token
-                    if (lastEnd < token.length()) {
-                        lexemes.add(token.substring(lastEnd));
-                    }
-                }
+            //printTokens(temp2);
+            Pattern operatorPattern = Pattern.compile("#|[_a-zA-Z]+[0-9]*|\\*|>>=?|<<=?|==|=|!=|->|<=|>=|&&|[/%&|.!^<>]|\\|\\||\\+\\+|\\+|[-+]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]\\.[0-9]|--|-|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>");
+            OperatorPattern(operatorPattern,temp2);
+            for (int i = 0; i < lexemes.size(); i++) {
+                System.out.println(lexemes.get(i));
             }
-
-            printTokens(lexemes);
         }
-
         catch (IOException e) {
             System.out.println("Error opening input file: " + e.getMessage());
         }
     }
-//[=]+|[+]+|
-    private String typeOf(String lexeme) {
-        // Implementation would go here
-        return ""; // Placeholder return statement
+    private List<String> TokenizeHelper(Pattern x,List<String> y,List<String> z) {
+        for (String token : y) {
+            Matcher matcher = x.matcher(token);
+            while (matcher.find()) {
+                String match = matcher.group();
+                z.add(match);
+            }
+        }
+        return z;
+    }
+    private void OperatorPattern(Pattern x,List<String> y) {
+        for (String token : y) {
+            if (token.startsWith("\"")) {
+                // If the token starts with a double quote, add it to temp3 directly without modification
+                lexemes.add(token);
+            } else {
+                Matcher matcher = x.matcher(token);
+                int lastEnd = 0;
+                while (matcher.find()) {
+                    if (matcher.start() > lastEnd) {
+                        // Add non-operator token that precedes the operator
+                        lexemes.add(token.substring(lastEnd, matcher.start()));
+                    }
+                    // Add the operator token
+                    lexemes.add(matcher.group());
+                    lastEnd = matcher.end();
+                }
+                // Add any remaining text after the last match as a token
+                if (lastEnd < token.length()) {
+                    lexemes.add(token.substring(lastEnd));
+                }
+            }
+        }
+//        for (int i = 0; i < lexemes.size(); i++) {
+//            System.out.println(lexemes.get(i));
+//        }
+    }
+    public void typeOf() {
+        String stringsPattern = "\".*\""; // Matches string literals
+        String charsPattern = "'.?'"; // Matches char literals
+        String operatorsPattern = "#|\\*|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-/%&|.!^=<>]+"; // Simple example for common operators
+        String punctuationPattern = "([()\\[\\]{},;?])"; // Common punctuation marks
+        String integersPattern = "[-+]?[0-9]+"; // Matches integer numbers
+        String floatsPattern = "[-+]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?"; // Matches floating-point numbers
+        String keywordsPattern = "(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|restrict|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while)";
+        String identifier = "[_a-zA-Z][_a-zA-Z0-9]*"; // identifier
+        String VarIdPattern = "int|float|char|double|long|short|signed|unsigned|void";
+        boolean VarId = false;
+        boolean StructId = false;
+        for (int i=0;i<lexemes.size();i++){
+            if (lexemes.get(i).matches(VarIdPattern)) {
+                VarId = true;
+            } if (lexemes.get(i).matches("struct")) {
+                StructId = true;
+            }
+            if (lexemes.get(i).matches(stringsPattern)) {
+                tokens.add(new Token(lexemes.get(i), "String"));
+            } else if (lexemes.get(i).matches(charsPattern)) {
+                tokens.add(new Token(lexemes.get(i), "Char"));
+            } else if (lexemes.get(i).matches(operatorsPattern)) {
+                tokens.add(new Token(lexemes.get(i), "Operator"));
+            } else if (lexemes.get(i).matches(punctuationPattern)) {
+                tokens.add(new Token(lexemes.get(i), "Punctuation"));
+            } else if (lexemes.get(i).matches(integersPattern)) {
+                tokens.add(new Token(lexemes.get(i), "Integer"));
+            } else if (lexemes.get(i).matches(floatsPattern)) {
+                tokens.add(new Token(lexemes.get(i), "Float"));
+            } else if (lexemes.get(i).matches(keywordsPattern)) {
+                tokens.add(new Token(lexemes.get(i), "Keyword"));//
+            }
+             else if (lexemes.get(i).matches(identifier)) {
+                tokens.add(new Token(lexemes.get(i), "Identifier"));
+                if (lexemes.get(i+1).matches("\\(")) {
+                    tokens.get(tokens.size() - 1).IdType = "Function";
+                }
+                else if (VarId) {
+                    tokens.get(tokens.size() - 1).IdType = "Variable";
+                    VarId = false;
+                }
+                else if ((StructId && lexemes.get(i-1).matches("struct")) || (StructId && lexemes.get(i-1).matches("}") && lexemes.get(i+1).matches(";"))) {
+                    tokens.get(tokens.size() - 1).IdType = "Struct";
+                    StructId = false;
+                }
+            }
+        }
     }
 
-    public void printTokens(List<String> t) {
-        for (int i=0 ;i<t.size() ; i++) {
-            System.out.println(t.get(i));
+    public void printTokens() {
+        for (int i=0 ;i<tokens.size() ; i++) {
+            System.out.println("<" + tokens.get(i).Tokentype + "," + tokens.get(i).Lexeme + ">"+ " ");
+            if(tokens.get(i).IdType != null) {
+                System.out.println("ID Type: " + tokens.get(i).IdType+ "\n");
+            }
         }
     }
     public static void main(String[] args) {
         LexicalAnalyzer analyzer = new LexicalAnalyzer();
-        String directory = "D:\\Semester 6\\Design of Compilers\\Project\\cpp\\test.txt";
+        String directory = "D:\\Semester 6\\Design of Compilers\\Project\\test.txt";
         analyzer.tokenize(directory);
+        analyzer.typeOf();
+//        for(int i=0;i<analyzer.tokens.size();i++){
+//            System.out.println(analyzer.tokens.get(i).Lexeme );
+//        }
+        //analyzer.printTokens();
 
     }
 }

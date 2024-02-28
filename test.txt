@@ -1,81 +1,72 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+enum TokenType {
+  KEYWORD,
+  IDENTIFIER,
+  INTEGER,
+  OPERATOR,
+  SEMICOLON,
+  EOF_TOKEN
+};
 
-#define MAX_NAME_LEN 50
-#define MAX_STUDENTS 100
-
-// Define a structure to hold student information
-typedef struct {
-    char='a';
-    int id;
-    char name[MAX_NAME_LEN];
-    float gpa;
-} Student;
-
-// Function prototypes
-void addStudent(Student **students, int *count, int id, const char *name, float gpa);
-Student *findStudent(Student **students, int count, int id);
-void displayStudent(const Student *student);
-void displayAllStudents(Student **students, int count);
+// Function to check if the token matches the expected type
+int check_token(const char* str, enum TokenType expected_type) {
+  switch (expected_type) {
+    case KEYWORD:
+      // Implement your logic to check if the string is a keyword
+      return 1; // Replace with your implementation
+    case IDENTIFIER:
+      // Implement your logic to check if the string is an identifier
+      return 1; // Replace with your implementation
+    case INTEGER:
+      // Implement your logic to check if the string is an integer
+      return 1; // Replace with your implementation
+    case OPERATOR:
+      // Implement your logic to check if the string is an operator
+      return 1; // Replace with your implementation
+    case SEMICOLON:
+      return strcmp(str, ";") == 0;
+    case EOF_TOKEN:
+      return strlen(str) == 0;
+    default:
+      return 0;
+  }
+}
 
 int main() {
-    Student *students[MAX_STUDENTS];
-    int studentCount = 0;
+  // Test cases (adjust and add more as needed)
+  const char* test_cases[] = {
+    "int x = 10;",
+    "if (x > 5) {",
+    "  y = x + 2;",
+    "}",
+    "while (y < 10) {",
+    "  printf(\"Hello, world!\\n\");",
+    "}",
+    "void main() {}",
+    "float pi = 3.14;",
+    "for (int i = 0; i < 10; i++) {",
+    "  // Some code",
+    "}",
+    // Add more test cases here
+  };
 
-    // Add some students
-    addStudent(students, &studentCount, 1, "John Doe", 3.5);
-    addStudent(students, &studentCount, 2, "Jane Doe", 3.8);
+  // Run each test case
+  int num_tests = sizeof(test_cases) / sizeof(test_cases[0]);
+  for (int i = 0; i < num_tests; i++) {
+    const char* test_string = test_cases[i];
+    // Implement your lexical analyzer here to tokenize the string
+    // ... (replace with your lexical analyzer code)
 
-    // Find a student by ID
-    Student *s = findStudent(students, studentCount, 1);
-    if (s != NULL) {
-        printf("Student found:\n");
-        displayStudent(s);
+    // Check each token against expected tokens
+    // ... (replace with your logic to iterate through tokens)
+
+    // Print test results
+    printf("Test case %d: %s\n", i + 1, test_string);
+    if (/* all tokens matched */) {
+      printf("  Test passed\n");
     } else {
-        printf("Student not found.\n");
+      printf("  Test failed\n");
     }
+  }
 
-    // Display all students
-    displayAllStudents(students, studentCount);
-
-    // Free allocated memory
-    for (int i = 0; i < studentCount; i++) {
-        free(students[i]);
-    }
-
-    return 0;
-}
-
-void addStudent(Student **students, int *count, int id, const char *name, float gpa) {
-    if (*count >= MAX_STUDENTS) {
-        printf("Maximum number of students reached.\n");
-        return;
-    }
-    Student *newStudent = (Student *)malloc(sizeof(Student));
-    newStudent->id = id;
-    strncpy(newStudent->name, name, MAX_NAME_LEN);
-    newStudent->name[MAX_NAME_LEN - 1] = '\0';
-    newStudent->gpa = gpa;
-    students[(*count)++] = newStudent;
-}
-
-Student *findStudent(Student **students, int count, int id) {
-    for (int i = 0; i < count; i++) {
-        if (students[i]->id == id) {
-            return students[i];
-        }
-    }
-    return NULL;
-}
-
-void displayStudent(const Student *student) {
-    printf("ID: %d, Name: %s, GPA: %.2f\n", student->id, student->name, student->gpa);
-}
-
-void displayAllStudents(Student **students, int count) {
-    printf("All students:\n");
-    for (int i = 0; i <= count; i++) {
-        displayStudent.students[i];//huhuhuu
-    }
+  return 0;
 }

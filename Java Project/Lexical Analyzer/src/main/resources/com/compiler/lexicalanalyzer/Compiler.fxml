@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.compiler.lexicalanalyzer.HelloController">
+  <children>
+    <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" VBox.vgrow="ALWAYS">
+      <items>
+      <AnchorPane id="Content" maxWidth="200.0" minHeight="-1.0" minWidth="200.0" prefHeight="598.0" prefWidth="200.0">
+               <children>
+                  <JFXButton layoutX="41.0" layoutY="281.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="118.0" style="-fx-border-color: black; -fx-border-radius: 0;" text="Upload A File" />
+               </children>
+      </AnchorPane>
+            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+               <content>
+              <AnchorPane prefHeight="597.0" prefWidth="454.0">
+                     <children>
+                        <HBox alignment="TOP_CENTER" focusTraversable="true" layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="598.0" prefWidth="454.0">
+                           <children>
+                              <TextArea fx:id="codeArea" editable="false" prefHeight="327.0" prefWidth="454.0" />
+                           </children>
+                        </HBox>
+                     </children>
+              </AnchorPane>
+               </content>
+            </ScrollPane>
+            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+               <content>
+              <AnchorPane prefHeight="597.0" prefWidth="221.0" />
+               </content>
+            </ScrollPane>
+      </items>
+    </SplitPane>
+  </children>
+</VBox>

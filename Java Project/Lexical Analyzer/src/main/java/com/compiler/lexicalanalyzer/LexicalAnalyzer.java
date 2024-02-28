@@ -1,3 +1,5 @@
+package com.compiler.lexicalanalyzer;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -66,7 +68,7 @@ public class LexicalAnalyzer {
             //printTokens(temp2);
             Pattern operatorPattern = Pattern.compile(
                     "[_a-zA-Z]+[0-9]*|[/%&|.!^<>]|\\*|>>=?|<<=?|==?|!=|->|<=|>=|&&|\\|\\||[+\\-]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?"
-                     // Matches identifiers, numbers, and logical operators
+                        // Matches identifiers, numbers, and logical operators
                     +"|\\+\\+|\\+|--|-|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|" //Matches arithmetic operators
                     +"#|<[^>]*>" // Matches Library definitions
             );

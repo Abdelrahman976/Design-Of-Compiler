@@ -77,7 +77,7 @@ public class LexicalAnalyzer {
             temp1.clear();
             //printTokens(temp2);
             Pattern operatorPattern = Pattern.compile(
-                    "[0-9]+\\.?[0-9]*(f|ULL|LL|U|L|UL)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z]+[0-9]*|>>=?|<<=?|==?|!=|->|<=|>=|&&|\\|\\||[/%&|.!^<>]|[+\\-]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?"
+                    "[0-9]+\\.?[0-9]*(f|F|ULL|ull|LL|ll|u|U|L|l|UL|ul)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z]+[0-9]*|>>=?|<<=?|==?|!=|->|<=|>=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
                         // Matches identifiers, numbers, and logical operators
                     +"|\\+\\+|\\+|--|-|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|\\*|" //Matches arithmetic operators
                     +"#|<[^>]*>" // Matches Library definitions
@@ -134,33 +134,71 @@ public class LexicalAnalyzer {
         String charsPattern = "'.?'"; // Matches char literals
         String operatorsPattern = "#|\\*|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-/%&|.!^=<>]+"; // Simple example for common operators
         String punctuationPattern = "([()\\[\\]{},;?])"; // Common punctuation marks
-        String LongPattern= "[0-9]+\\.?[0-9]*(L|UL)"; // Matches long numbers
-        String LongLongPattern= "[0-9]+\\.?[0-9]*(ULL|LL)"; // Matches long numbers
-        String integersPattern = "[-+]?[0-9]+|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+"; // Matches integer numbers
-        String floatsPattern = "[-+]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f"; // Matches floating-point numbers
+        String LongPattern= "[0-9]+\\.?[0-9]*(L|UL|l|ul)"; // Matches long numbers
+        String LongLongPattern= "[0-9]+\\.?[0-9]*(ULL|LL|ull|ll)"; // Matches long numbers
+        String integersPattern = "[-+]?[0-9]+|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|((\\+-)*\\+?|(-\\+)*-?)(0|[1-9][0-9]*)"; // Matches integer numbers
+        String floatsPattern = "[-+]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((-\\+)*-?)(0|[1-9][0-9]*[.])?[0-9]+([eE][-+]?\\d+)?"; // Matches floating-point numbers
         String keywordsPattern = "(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|restrict|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while)";
         String identifier = "[_a-zA-Z][_a-zA-Z0-9]*"; // identifier
         boolean StructId = false;
+        boolean UnionId = false;
         boolean EnumId = false;
+        boolean skip = false;
         for (int i=0;i<lexemes.size();i++){
+            if(skip){
+                skip = false;
+                continue;
+            }
             if(lexemes.get(i).matches("enum"))
                 EnumId = true;
             if (lexemes.get(i).matches("struct"))
                 StructId = true;
+            if (lexemes.get(i).matches("union"))
+                UnionId = true;
             if (lexemes.get(i).matches(stringsPattern)) {
                 tokens.add(new Token(lexemes.get(i), "String Literal"));
             } else if (lexemes.get(i).matches(charsPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Char Literal"));
             } else if (lexemes.get(i).matches(operatorsPattern)) {
-                tokens.add(new Token(lexemes.get(i), "Operator"));
+                if (i>1&&lexemes.get(i).matches("[+|-]")&&lexemes.get(i-1).matches("=")&&(lexemes.get(i+1).matches(integersPattern)||lexemes.get(i+1).matches(floatsPattern))){
+                    skip = true;
+                    String concatenated = lexemes.get(i) + lexemes.get(i+1); // Concatenate strings
+                    lexemes.set(i, concatenated);
+                    if(lexemes.get(i+1).matches(integersPattern))
+                        tokens.add(new Token(lexemes.get(i), "Integer"));
+                    else if(lexemes.get(i+1).matches(floatsPattern))
+                        tokens.add(new Token(lexemes.get(i), "Float"));
+                    else if (lexemes.get(i+1).matches(LongLongPattern))
+                        tokens.add(new Token(lexemes.get(i), "Long Long"));
+                    else if (lexemes.get(i+1).matches(LongPattern))
+                        tokens.add(new Token(lexemes.get(i), "Long"));
+                } else {
+                tokens.add(new Token(lexemes.get(i), "Operator"));}
+
             } else if (lexemes.get(i).matches(punctuationPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Punctuation"));
             } else if (lexemes.get(i).matches(LongLongPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Long Long"));
             } else if (lexemes.get(i).matches(LongPattern)) {
-                tokens.add(new Token(lexemes.get(i), "Long Long"));
+                tokens.add(new Token(lexemes.get(i), "Long"));
             } else if (lexemes.get(i).matches(integersPattern)) {
-                tokens.add(new Token(lexemes.get(i), "Integer"));
+//                if((lexemes.get(i).matches("\\+")&&lexemes.get(i+1).matches("-")&&(lexemes.get(i-1).matches(integersPattern)||lexemes.get(i-1).matches(floatsPattern))))  {
+//                    String lexeme = lexemes.get(i);
+//                    int plusIndex = lexeme.indexOf('+'); // Find the index of the first plus sign
+//                    String withoutFirstPlus = lexeme.substring(plusIndex + 1); // Cut out the first plus
+//                    lexemes.set(i, withoutFirstPlus); // Update the list with the modified string
+//                    tokens.add(new Token("+", "Operator"));
+//                    i--;
+//                } else if((lexemes.get(i).matches("-")&&lexemes.get(i+1).matches("\\+")&&(lexemes.get(i-1).matches(integersPattern)||lexemes.get(i-1).matches(floatsPattern)))) {
+//                    String lexeme = lexemes.get(i);
+//                    int minusIndex = lexeme.indexOf('-'); // Find the index of the first plus sign
+//                    String withoutFirstMinus = lexeme.substring(minusIndex + 1); // Cut out the first plus
+//                    lexemes.set(i, withoutFirstMinus); // Update the list with the modified string
+//                    tokens.add(new Token("-", "Operator"));
+//                    i--;
+//                }
+//                else
+                    tokens.add(new Token(lexemes.get(i), "Integer"));
             } else if (lexemes.get(i).matches(floatsPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Float"));
             } else if (lexemes.get(i).matches(keywordsPattern)) {
@@ -168,19 +206,18 @@ public class LexicalAnalyzer {
             }
              else if (lexemes.get(i).matches(identifier)) {
                 tokens.add(new Token(lexemes.get(i), "Identifier"));
-                if(EnumId && lexemes.get(i-1).matches("enum")) {
+                if(EnumId && lexemes.get(i-1).matches("enum")||(EnumId && lexemes.get(i-1).matches("}")&& lexemes.get(i+1).matches(";"))) {
                     tokens.getLast().IdType = "Enum";
                     EnumId=false;
-                }
-                else if (lexemes.get(i+1).matches("\\(")) {
+                } else if ( UnionId && lexemes.get(i-1).matches("union") || (UnionId && lexemes.get(i-1).matches("}") && lexemes.get(i+1).matches(";"))) {
+                    tokens.getLast().IdType = "Union";
+                    UnionId = false;
+                } else if (lexemes.get(i+1).matches("\\(")) {
                     tokens.getLast().IdType = "Function";
                 }
                 else if ((StructId && lexemes.get(i-1).matches("struct")) || (StructId && lexemes.get(i-1).matches("}") && lexemes.get(i+1).matches(";"))) {
                     tokens.getLast().IdType = "Struct";
                     StructId = false;
-                }
-                else if(!StructId && !EnumId) {
-                    tokens.getLast().IdType = "Variable";
                 }
             }
         }
@@ -194,7 +231,7 @@ public class LexicalAnalyzer {
             }
         }
     }
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         LexicalAnalyzer analyzer = new LexicalAnalyzer();
         String directory = "D:\\Semester 6\\Design of Compilers\\Project\\MainTest.c";
         analyzer.tokenize(directory);

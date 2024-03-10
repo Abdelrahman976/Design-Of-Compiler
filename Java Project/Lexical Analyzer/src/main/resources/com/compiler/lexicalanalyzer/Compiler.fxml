@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
@@ -7,34 +11,65 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.compiler.lexicalanalyzer.HelloController">
-  <children>
-    <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" VBox.vgrow="ALWAYS">
-      <items>
-      <AnchorPane id="Content" maxWidth="200.0" minHeight="-1.0" minWidth="200.0" prefHeight="598.0" prefWidth="200.0">
+<VBox maxHeight="1.7976931348623157E308" prefHeight="600.0" prefWidth="961.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.compiler.lexicalanalyzer.CompilerController">
+    <children>
+        <SplitPane dividerPositions="0.5797705943691345" focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="521.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
+            <items>
+            <VBox alignment="CENTER" minWidth="550.0" prefHeight="597.0" prefWidth="553.0">
                <children>
-                  <JFXButton layoutX="41.0" layoutY="281.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="118.0" style="-fx-border-color: black; -fx-border-radius: 0;" text="Upload A File" />
-               </children>
-      </AnchorPane>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0">
-               <content>
-              <AnchorPane prefHeight="597.0" prefWidth="454.0">
+                  <AnchorPane prefHeight="47.0" prefWidth="553.0">
                      <children>
-                        <HBox alignment="TOP_CENTER" focusTraversable="true" layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="598.0" prefWidth="454.0">
-                           <children>
-                              <TextArea fx:id="codeArea" editable="false" prefHeight="327.0" prefWidth="454.0" />
-                           </children>
-                        </HBox>
+                        <Label layoutX="20.0" layoutY="10.0" text="&lt;/&gt; Code:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
                      </children>
-              </AnchorPane>
-               </content>
-            </ScrollPane>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0">
-               <content>
-              <AnchorPane prefHeight="597.0" prefWidth="221.0" />
-               </content>
-            </ScrollPane>
-      </items>
-    </SplitPane>
-  </children>
+                  </AnchorPane>
+                      <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="400.0" prefHeight="407.0" prefWidth="553.0" style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" VBox.vgrow="ALWAYS">
+                          <content>
+                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent;">
+                                  <children>
+                                      <TextArea fx:id="lineArea" disable="true" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="598.0" prefWidth="49.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="Cascadia Code Regular" size="13.0" />
+                                 </font>
+                              </TextArea>
+                                      <TextArea fx:id="codeArea" editable="false" layoutX="33.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="465.0" prefWidth="478.0" style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="Cascadia Code Regular" size="13.0" />
+                                 </font>
+                              </TextArea>
+                                  </children>
+                              </AnchorPane>
+                          </content>
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </VBox.margin>
+                      </ScrollPane>
+                  <HBox alignment="CENTER" fillHeight="false" maxHeight="80.0" minHeight="80.0" prefHeight="130.0" prefWidth="553.0" spacing="30.0" VBox.vgrow="NEVER">
+                     <children>
+                        <JFXButton minWidth="130.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: transparent;" text="Choose a File" />
+                        <JFXButton minWidth="130.0" onMouseClicked="#scanCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: transparent;" text="Scan Code" />
+                        <JFXButton minWidth="130.0" onMouseClicked="#parseCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: transparent;" text="Parse Code" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+                  <AnchorPane fx:id="viewWindow" maxHeight="1.7976931348623157E308" maxWidth="400.0" minWidth="400.0" prefWidth="400.0" stylesheets="@Style.css">
+               <children>
+                  <ScrollPane prefHeight="598.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                        <VBox fx:id="vboxView" alignment="CENTER" prefHeight="583.0" prefWidth="384.0" spacing="5.0">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
 </VBox>

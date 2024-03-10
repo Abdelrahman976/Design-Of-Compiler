@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 public class LexicalAnalyzer {
-    private class Token {
+    protected class Token {
         String Lexeme;
         String Tokentype;
         String IdType;
@@ -26,6 +26,9 @@ public class LexicalAnalyzer {
             this.Lexeme = name;
             this.Tokentype = type;
             this.index = index;
+        }
+        public String getLexeme() {
+            return Lexeme;
         }
     }
     private class SymbolTable {
@@ -316,7 +319,7 @@ public class LexicalAnalyzer {
     }
     public static void main(String[] args)  {
         LexicalAnalyzer analyzer = new LexicalAnalyzer();
-        String directory = "D:\\Semester 6\\Design of Compilers\\Project\\TestCases\\Test1.c";
+        String directory = "D:\\Maeen\\UNI Documents\\OneDrive - Faculty of Engineering Ain Shams University\\Junior\\Spring 2024\\Design of Compilers\\Project\\Design-Of-Compiler\\test.txt";
         analyzer.tokenize(directory);
         analyzer.typeOf();
         analyzer.printTokens();

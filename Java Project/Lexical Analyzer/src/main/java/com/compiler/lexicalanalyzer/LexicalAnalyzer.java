@@ -316,7 +316,7 @@ public class LexicalAnalyzer {
     }
     public static void main(String[] args)  {
         LexicalAnalyzer analyzer = new LexicalAnalyzer();
-        String directory = "D:\\Semester 6\\Design of Compilers\\Project\\c_code.c";
+        String directory = "D:\\Semester 6\\Design of Compilers\\Project\\TestCases\\Test1.c";
         analyzer.tokenize(directory);
         analyzer.typeOf();
         analyzer.printTokens();

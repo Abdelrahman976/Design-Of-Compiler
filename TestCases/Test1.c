@@ -1,6 +1,8 @@
+int 0ull=5;
 int iffy;
+int x= "hehehe;
 null->;
-int x;
+int 1x;
 int xx;
 bool x =true;
 typedef enum {
@@ -108,7 +110,7 @@ int num = 10;
     int *ptr;
     ptr = &num;
     printf("The address of num is: %p\n", &num);
-    printf("The \"value pointed to by ptr is: %d\n", *ptr);
+    printf("The \"value pointed to by\" ptr is: %d\n", *ptr);
 
     return 0;
 }

@@ -45,17 +45,19 @@ public class LexicalAnalyzer {
     private  List<Token> tokens = new ArrayList<>();
     private  List<String> lexemes = new ArrayList<>();
     private List<SymbolTable> symbolTableRow = new ArrayList<>();
-    BufferedReader RemoveComments(String path) throws IOException {
+    BufferedReader RemoveCommentsLibraries(String path) throws IOException {
         // Read the entire file as bytes
         byte[] fileBytes = Files.readAllBytes(Paths.get(path));
         // Convert bytes to string if necessary
         String fileContent = new String(fileBytes); // Use the appropriate character encoding if known
         fileContent = fileContent.replaceAll("//.*|(?s)/\\*.*?\\*/", ""); // remove comments
+        fileContent = fileContent.replaceAll("#include\\s+[\"<][^\">]+[\">](\\r?\\n|\\r)", "");// remove libraries
+
         return new BufferedReader(new StringReader(fileContent));
     }
 
     public void tokenize(String directory) {
-        try (BufferedReader infile = RemoveComments(directory)){
+        try (BufferedReader infile = RemoveCommentsLibraries(directory)){
             String line;
             List<String> temp1 = new ArrayList<>();
             List<String> temp2 = new ArrayList<>();
@@ -65,24 +67,24 @@ public class LexicalAnalyzer {
 //            for (int i = 0; i < temp2.size(); i++) {
 //                System.out.println(temp2.get(i));
 //            }
-            Pattern spaceSemiColonPattern = Pattern.compile("\"(?:[^\"\\\\]|\\\\.)*\"|^\\\"|\"[^\"]*\"|[^ \"]+|\\n$");
-            TokenizeHelper(spaceSemiColonPattern, temp2, temp1);
+            Pattern Filter1 = Pattern.compile("\"(?:[^\"\\\\]|\\\\.)*\"|^\\\"|\"[^\"]*\"|[^ \"]+|\\n$|\"");
+            TokenizeHelper(Filter1, temp2, temp1);
             temp2.clear();
 //            for (int i = 0; i < temp1.size(); i++) {
 //                System.out.println(temp1.get(i));
 //            }
             //printTokens(temp1);
-            Pattern Filter1 = Pattern.compile("\"(?:[^\"\\\\]|\\\\.)*\"|([()\\[\\]{},;?])|[^()\\[\\]{},;? ]+");
-            TokenizeHelper(Filter1, temp1, temp2);
+            Pattern Filter2 = Pattern.compile("\"(?:[^\"\\\\]|\\\\.)*\"|([()\\[\\]{},;?])|[^()\\[\\]{},;? ]+");
+            TokenizeHelper(Filter2, temp1, temp2);
             temp1.clear();
             //printTokens(temp2);
-            Pattern Filter2 = Pattern.compile(
-                    "[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[0-9]+\\.?[0-9]*(f|F|ULL|ull|LL|ll|u|U|L|l|UL|ul)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z]+[0-9]*|>>=?|<<=?|==?|!=|->|<=|>=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
+            Pattern Filter3 = Pattern.compile(
+                    "[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z]+[0-9]*|>>=?|<<=?|==?|!=|->|<=|>=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
                     +"|\\+\\+|\\+|--|-|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|\\*|"
                     +"#|<[^>]*>"
             );
 
-            FilteringHelper(Filter2,temp2);
+            FilteringHelper(Filter3,temp2);
 //            for (int i = 0; i < lexemes.size(); i++) {
 //                System.out.println(lexemes.get(i));
 //            }
@@ -127,12 +129,12 @@ public class LexicalAnalyzer {
     public void typeOf() {
         String stringsPattern = "\".*\""; // Matches string literals
         String charsPattern = "'.?'"; // Matches char literals
-        String operatorsPattern = "~|:|#|\\*|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-/%&|.!^=<>]+"; // Simple example for common operators
+        String operatorsPattern = "\"|~|:|#|\\*|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-/%&|.!^=<>]+"; // Simple example for common operators
         String punctuationPattern = "([()\\[\\]{},;?])"; // Common punctuation marks
         String LongPattern= "[0-9]+\\.?[0-9]*(L|UL|l|ul)"; // Matches long numbers
         String LongLongPattern= "[0-9]+\\.?[0-9]*(ULL|LL|ull|ll)"; // Matches long numbers
         String integersPattern = "[-+]?[0-9]+|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|((\\+-)*\\+?|(-\\+)*-?)(0|[1-9][0-9]*)"; // Matches integer numbers
-        String floatsPattern = "[-+]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((-\\+)*-?)(0|[1-9][0-9]*[.])?[0-9]+([eE][-+]?\\d+)?"; // Matches floating-point numbers
+        String floatsPattern = "[-+]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?([fF])|[0-9]+f|((-\\+)*-?)(0|[1-9][0-9]*[.])?[0-9]+([eE][-+]?\\d+)?"; // Matches floating-point numbers
         String keywordsPattern = "(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|restrict|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while)";
         String identifier = "[_a-zA-Z][_a-zA-Z0-9]*"; // identifier
 //        String BadStringPattern = "[0-9]+[_a-zA-Z][_a-zA-Z0-9]*"; // Matches badString literals
@@ -258,14 +260,24 @@ public class LexicalAnalyzer {
                 if (inBlockComment) {
                     if (line.contains("*/")) {
                         inBlockComment = false;
-                        line = line.split("\\*/")[0]; // Keep only the part before the end of the block comment
+                        String[] parts = line.split("\\*/", -1);
+                        if (parts.length > 0) {
+                            line = parts[0]; // Keep only the part before the end of the block comment
+                        }
                     }
-                } else if (line.contains("/*")) {
-                    inBlockComment = true;
-                    line = line.split("/\\*")[0]; // Keep only the part before the start of the block comment
-                } else if (line.contains("//")) {
-                    line = line.split("//")[0]; // Keep only the part before the inline comment
+                } else {
+                    String[] blockParts = line.split("/\\*", -1);
+                    if (blockParts.length > 1) {
+                        inBlockComment = true;
+                        line = blockParts[0]; // Keep only the part before the start of the block comment
+                    }
+
+                    String[] inlineParts = line.split("//", -1);
+                    if (inlineParts.length > 0) {
+                        line = inlineParts[0]; // Keep only the part before the inline comment
+                    }
                 }
+
                 for (SymbolTable symbol : symbolTableRow) {
                     // Create a pattern that matches the symbol name as a standalone word
                     Pattern pattern = Pattern.compile("(?<!%)\\b" + symbol.name + "\\b");
@@ -295,9 +307,6 @@ public class LexicalAnalyzer {
                 // Print the first part of the row including the ID, name, type, size, and the first line of declaration
                 System.out.printf(rowFormat, symbol.ID, symbol.name, symbol.type, symbol.size, symbol.line_of_refrences.getFirst());
             }
-
-
-
             for (int line=1;line<symbol.line_of_refrences.size(); line++)
                 System.out.print(symbol.line_of_refrences.get(line) + " ");
 
@@ -305,16 +314,13 @@ public class LexicalAnalyzer {
             System.out.println();
         }
     }
-
-
     public static void main(String[] args)  {
         LexicalAnalyzer analyzer = new LexicalAnalyzer();
-        String directory = "D:\\Semester 6\\Design of Compilers\\Project\\MainTest.c";
+        String directory = "D:\\Semester 6\\Design of Compilers\\Project\\c_code.c";
         analyzer.tokenize(directory);
         analyzer.typeOf();
-       //analyzer.printTokens();
-       analyzer.SymbolTableMaker(directory);
-       analyzer.printSymbolTable();
-
+        analyzer.printTokens();
+//        analyzer.SymbolTableMaker(directory);
+//        analyzer.printSymbolTable();
     }
 }

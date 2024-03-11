@@ -37,6 +37,9 @@ public class CompilerController implements Initializable {
     @FXML
     void readCode(MouseEvent event) {
         file = fileChooser.showOpenDialog(new Stage());
+        if (file == null) {
+            return;
+        }
         try {
             Scanner scanner = new Scanner(file);
             if (!codeArea.equals("")){
@@ -106,7 +109,7 @@ String [] tokenType = {"Keyword", "Identifier", "Operator", "Integer", "Float", 
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fileChooser.setInitialDirectory(new File("D:\\Maeen\\UNI Documents\\OneDrive - Faculty of Engineering Ain Shams University\\Junior\\Spring 2024\\Design of Compilers\\Project\\Design-Of-Compiler"));
+        fileChooser.setInitialDirectory(new File("../../"));
         codeArea.scrollTopProperty().addListener((observable, oldValue, newValue) -> {
             lineArea.setScrollTop(newValue.doubleValue());
         });

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -49,9 +50,30 @@
                       </ScrollPane>
                   <HBox alignment="CENTER" fillHeight="false" maxHeight="80.0" minHeight="80.0" prefHeight="130.0" prefWidth="553.0" spacing="30.0" VBox.vgrow="NEVER">
                      <children>
-                        <JFXButton minWidth="130.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: transparent;" text="Choose a File" />
-                        <JFXButton minWidth="130.0" onMouseClicked="#scanCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: transparent;" text="Scan Code" />
-                        <JFXButton minWidth="130.0" onMouseClicked="#parseCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: transparent;" text="Parse Code" />
+                        <JFXButton graphicTextGap="10.0" minWidth="130.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: transparent; -fx-border-width: 2;" text="Upload File" textAlignment="CENTER">
+                           <graphic>
+                              <FontAwesomeIcon glyphName="FILE_CODE_ALT" size="1.3em" textAlignment="CENTER" wrappingWidth="14.142857551574707" />
+                           </graphic>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </JFXButton>
+                        <JFXButton graphicTextGap="10.0" minWidth="130.0" onMouseClicked="#scanCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: transparent; -fx-border-width: 2;" text="Scan Code" textAlignment="CENTER">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIcon glyphName="SEARCH" size="1.3em" textAlignment="CENTER" wrappingWidth="14.142857551574707" />
+                           </graphic>
+                        </JFXButton>
+                        <JFXButton minWidth="130.0" onMouseClicked="#parseCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-color: transparent; -fx-border-width: 2;" text="Parse Code">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIcon glyphName="FILES_ALT" selectionEnd="0" size="1.3em" />
+                           </graphic>
+                        </JFXButton>
                      </children>
                   </HBox>
                </children>

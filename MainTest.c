@@ -1,5 +1,8 @@
+int iffy;
 null->;
-bool;
+int x;
+int xx;
+bool x =true;
 typedef enum {
     INT,
     FLOAT,
@@ -12,12 +15,13 @@ union {
     char charValue;
 }MyVariant;
 
-struct {
+struct Variant{
     DataType type;
     union MyVariant data;
 }Variant;
 +-+-+-+-+-1;
-int x=1+-+-1;
+int 1x=1+-+-+1;
+int z=+-+-+-+-+-1;
 float x=-1.39434e-10;
 int x=+1+1;
 float y=1.1+1.2;
@@ -51,7 +55,7 @@ void compare(int a, int b, int c, int d) {
 }
     
 int main() {
-    
+
     short item_quantity_456 = 32767;
     long long total_assets_415 = 9223372036854775807LL;
     unsigned long long database_entries_930 = 18446744073709551615ULL;
@@ -104,7 +108,7 @@ int num = 10;
     int *ptr;
     ptr = &num;
     printf("The address of num is: %p\n", &num);
-    printf("The value pointed to by ptr is: %d\n", *ptr);
+    printf("The \"value pointed to by ptr is: %d\n", *ptr);
 
     return 0;
 }

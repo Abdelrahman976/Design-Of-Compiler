@@ -8,20 +8,24 @@
     -fx-max-width: 0px;
 }
 
-.table-view {
-    -fx-border-color: black; /* Set border color */
-    -fx-border-width: 2 0 2 0;
-    -fx-background-color: transparent;
+.table-view{
+    -fx-border-radius: 10 10 0 0;
+    -fx-background-radius: 10 10 0 0;
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
 }
+
 .table-view .column-header-background .filler {
     -fx-background-color: #3949ab;
+    -fx-border-radius: 0 10 0 0;
+    -fx-background-radius: 0 10 0 0;
 }
-/*table-view .column-header-background{*/
-/*    -fx-background-color: #3949ab;*/
-/*    -fx-background-radius: 7px 7px 0px 0px;*/
-/*    -fx-background-insets: 0 11px 0 0;*/
-/*    -fx-padding: 0 0 5px 0;*/
-/*}*/
+.table-view .column-header-background{
+    -fx-background-color: #3949ab;
+    -fx-border-radius: 10 10 10 10;
+    -fx-background-radius: 10 10 10 10;
+    -fx-background-insets: 0 11px 0 0;
+}
 
 .table-view .table-cell{
     -fx-border-color: transparent;
@@ -40,7 +44,9 @@
 }
 .table-view .column-header {
     -fx-background-color: #3949ab; /* Set header background */
-    -fx-font-size: 14;
+    -fx-font-size: 16;
+    -fx-border-radius: 10 0 0 0;
+    -fx-background-radius: 10 0 0 0;
 }
 
 .table-view .column-header .label {
@@ -50,6 +56,8 @@
 .table-view .table-cell:even {
     -fx-background-color: lightgrey;
     -fx-text-fill: black; /* Set default cell text color */
+    -fx-font-size: 14;
+
 }
 
 .table-view .table-cell:odd {
@@ -66,12 +74,21 @@
     -fx-background-color: derive(white, -5%);
 }
 
-.table-view .thumb {
-    -fx-background-color: #3949ab;
-}
 .table-view .thumb:hover {
     -fx-background-color: derive(#3949ab,15%);
 }
 .table-view .thumb:pressed {
     -fx-background-color: derive(#3949ab,-15%);
 }
+.table-view .virtual-flow .scroll-bar .increment-button,
+.table-view .virtual-flow .scroll-bar .decrement-button {
+    -fx-opacity: 0;
+    -fx-padding: 2;
+}
+.table-view .virtual-flow .scroll-bar:vertical .thumb{
+    -fx-background-color:  #3949ab;
+}
+.table-view .virtual-flow .scroll-bar:horizontal .thumb {
+    -fx-background-color:  #3949ab;
+}
+

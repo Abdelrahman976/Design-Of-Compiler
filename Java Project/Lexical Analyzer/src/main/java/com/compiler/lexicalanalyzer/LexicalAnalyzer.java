@@ -51,7 +51,7 @@ public class LexicalAnalyzer {
         // Convert bytes to string if necessary
         String fileContent = new String(fileBytes); // Use the appropriate character encoding if known
         fileContent = fileContent.replaceAll("//.*|(?s)/\\*.*?\\*/", ""); // remove comments
-        fileContent = fileContent.replaceAll("#include\\s+[\"<][^\">]+[\">](\\r?\\n|\\r)", "");// remove libraries
+        fileContent = fileContent.replaceAll("#include\\s*[\"<][^\">]+[\">](\\r?\\n|\\r)", "");// remove libraries
 
         return new BufferedReader(new StringReader(fileContent));
     }
@@ -129,8 +129,8 @@ public class LexicalAnalyzer {
     public void typeOf() {
         String stringsPattern = "\".*\""; // Matches string literals
         String charsPattern = "'.?'"; // Matches char literals
-        String operatorsPattern = "\"|~|:|#|\\*|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-/%&|.!^=<>]+"; // Simple example for common operators
-        String punctuationPattern = "([()\\[\\]{},;?])"; // Common punctuation marks
+        String operatorsPattern = "~|:|#|\\*|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-/%&|.!^=<>]+"; // Simple example for common operators
+        String punctuationPattern = "([()\\[\\]{},;?\"])"; // Common punctuation marks
         String LongPattern= "[0-9]+\\.?[0-9]*(L|UL|l|ul)"; // Matches long numbers
         String LongLongPattern= "[0-9]+\\.?[0-9]*(ULL|LL|ull|ll)"; // Matches long numbers
         String integersPattern = "[-+]?[0-9]+|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|((\\+-)*\\+?|(-\\+)*-?)(0|[1-9][0-9]*)"; // Matches integer numbers
@@ -320,7 +320,7 @@ public class LexicalAnalyzer {
         analyzer.tokenize(directory);
         analyzer.typeOf();
         analyzer.printTokens();
-//        analyzer.SymbolTableMaker(directory);
-//        analyzer.printSymbolTable();
+        //analyzer.SymbolTableMaker(directory);
+        //analyzer.printSymbolTable();
     }
 }

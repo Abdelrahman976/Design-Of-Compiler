@@ -39,6 +39,20 @@
                               <Font name="Cascadia Code Regular" size="13.0" />
                            </font>
                         </TextArea>
+                        <VBox fx:id="infoBox" alignment="CENTER" layoutX="73.0" layoutY="2.0" prefHeight="473.0" prefWidth="487.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="2.0">
+                           <children>
+                              <Label prefHeight="27.0" prefWidth="136.0" text="No Code to Display!" textAlignment="CENTER" textFill="#000000b4" wrapText="true">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="27.0" prefWidth="218.0" text="Please Select a C File to Complie " textAlignment="CENTER" textFill="#000000b4" wrapText="true">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
                             </children>
                      <padding>
                         <Insets left="20.0" right="20.0" />
@@ -46,7 +60,7 @@
                         </AnchorPane>
                   <HBox alignment="CENTER" fillHeight="false" maxHeight="80.0" minHeight="80.0" prefHeight="130.0" prefWidth="553.0" spacing="30.0" VBox.vgrow="NEVER">
                      <children>
-                        <JFXButton graphicTextGap="10.0" minWidth="130.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: #3949ab; -fx-border-radius: 5; -fx-background-color: #3949ab; -fx-border-width: 2;" text="Upload File" textAlignment="CENTER" textFill="WHITE">
+                        <JFXButton graphicTextGap="10.0" minWidth="130.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: #3949ab; -fx-border-radius: 5; -fx-background-color: #3949ab; -fx-border-width: 2;" text="Choose File" textAlignment="CENTER" textFill="WHITE">
                            <graphic>
                               <FontAwesomeIcon fill="WHITE" glyphName="FILE_CODE_ALT" size="1.3em" text="" textAlignment="CENTER" wrappingWidth="14.142857551574707" />
                            </graphic>

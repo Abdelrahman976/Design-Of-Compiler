@@ -36,6 +36,9 @@ public class CompilerController implements Initializable {
     private VBox vboxView;
     @FXML
     private AnchorPane viewWindow;
+    @FXML
+    private VBox infoBox;
+
 
     @FXML
     void readCode(MouseEvent event) {
@@ -58,6 +61,7 @@ public class CompilerController implements Initializable {
                 vboxView.getChildren().clear();
             }
             int i = 0;
+            infoBox.setVisible(false);
             while (scanner.hasNextLine()) {
                 i++;
                 lineArea.appendText(i + "\n");
@@ -133,19 +137,19 @@ public class CompilerController implements Initializable {
         viewWindow.getStyleClass().add("hideView");
         codeArea.getStyleClass().add("text-area");
         codeArea.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
-        @Override
-        public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-            Node content = codeArea.lookup(".content");
-            if (content != null && !codeArea.getText().isEmpty()) {
-                double contentWidth = content.getBoundsInLocal().getWidth();
-                double textAreaWidth = newValue.getWidth();
-                if (contentWidth > textAreaWidth-6) {
-                    lineArea.setPadding(new Insets(0, 0, 13, 0));
-                } else {
-                    lineArea.setPadding(new Insets(0, 0, 0, 0));
+            @Override
+            public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
+                Node content = codeArea.lookup(".content");
+                if (content != null && !codeArea.getText().isEmpty()) {
+                    double contentWidth = content.getBoundsInLocal().getWidth();
+                    double textAreaWidth = newValue.getWidth();
+                    if (contentWidth > textAreaWidth-6) {
+                        lineArea.setPadding(new Insets(0, 0, 13, 0));
+                    } else {
+                        lineArea.setPadding(new Insets(0, 0, 0, 0));
+                    }
                 }
             }
-        }
-    });
+        });
     }
 }

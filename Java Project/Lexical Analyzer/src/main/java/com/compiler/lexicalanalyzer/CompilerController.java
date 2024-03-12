@@ -75,7 +75,7 @@ public class CompilerController implements Initializable {
     @FXML
     void scanCode(MouseEvent event) {
         if (file == null)
-            new Alert("Error","Please choose a code to scan!", "red");
+            new Alert("Error","Please select a file to scan!", "red");
         else if(!vboxView.getChildren().isEmpty()){
             new Alert("Info","Code already scanned!", "blue");
         }else {

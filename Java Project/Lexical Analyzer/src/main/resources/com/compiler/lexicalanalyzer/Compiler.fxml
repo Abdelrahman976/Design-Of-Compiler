@@ -46,7 +46,7 @@
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label prefHeight="27.0" prefWidth="218.0" text="Please Select a C File to Complie " textAlignment="CENTER" textFill="#000000b4" wrapText="true">
+                              <Label prefHeight="27.0" prefWidth="218.0" text="Please Select a C File to Compile " textAlignment="CENTER" textFill="#000000b4" wrapText="true">
                                  <font>
                                     <Font size="15.0" />
                                  </font>

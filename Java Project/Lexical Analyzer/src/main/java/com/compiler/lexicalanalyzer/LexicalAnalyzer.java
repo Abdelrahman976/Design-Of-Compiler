@@ -15,21 +15,21 @@ public class LexicalAnalyzer {
         String Lexeme;
         String Tokentype;
         String IdType;
-        int index;
 
         Token(String name, String type) {
             this.Lexeme = name;
             this.Tokentype = type;
-            this.index = -1;
         }
 
         Token(String name, String type, int index) {
             this.Lexeme = name;
             this.Tokentype = type;
-            this.index = index;
         }
         public String getLexeme() {
             return Lexeme;
+        }
+        public String getIdType() {
+            return IdType;
         }
     }
     private class SymbolTable {
@@ -324,7 +324,7 @@ public class LexicalAnalyzer {
     public LexicalAnalyzer start(LexicalAnalyzer analyzer,String directory){
         analyzer.tokenize(directory);
         analyzer.typeOf();
-        analyzer.printTokens();
+//        analyzer.printTokens();
         return analyzer;
     }
     public static void main(String[] args)  {

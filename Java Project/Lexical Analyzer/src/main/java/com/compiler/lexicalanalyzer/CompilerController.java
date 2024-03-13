@@ -69,7 +69,7 @@ public class CompilerController implements Initializable {
             e.printStackTrace();
         }
     }
-    String [] tokenType = {"Keyword", "Identifier", "Operator", "Integer", "Float", "Long", "Long Long", "String Literal", "Char Literal", "Punctuation", "BadString"};
+    String [] tokenType = {"Keyword", "Identifier", "Operator", "Integer", "Float", "Long", "Long Long", "String Literal", "Char Literal", "Punctuation"};
     @FXML
     void scanCode(MouseEvent event) {
         if (file == null)
@@ -98,9 +98,15 @@ public class CompilerController implements Initializable {
         lexemeCol.setCellValueFactory(new PropertyValueFactory<>("Lexeme"));
         lexemeCol.setResizable(true);
         lexemeCol.setEditable(false);
+        TableColumn<LexicalAnalyzer.Token, String> typeCol = new TableColumn<>("Type");
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("IdType"));
+        typeCol.setResizable(true);
+        typeCol.setEditable(false);
         tokensTable.getItems().clear();
         for (LexicalAnalyzer.Token token : lexicalAnalyzer.getTokens()){
-            if(token.Tokentype.equals(type)){
+            if (token.IdType != null && token.Tokentype.equals("Identifier") && token.Tokentype.equals(type)){
+                tokensTable.getItems().add(token);
+            } else if(token.Tokentype.equals(type)){
                 tokensTable.getItems().add(token);
             }
         }
@@ -109,13 +115,23 @@ public class CompilerController implements Initializable {
             for (LexicalAnalyzer.Token item : tokensTable.getItems()) {
                 if (lexemeCol.getCellData(item) != null && lexemeCol.getCellData(item).length() > newVal.doubleValue()) {
                     lexemeCol.setMinWidth(Control.USE_PREF_SIZE);
+                    lexemeCol.setMaxWidth(Control.USE_PREF_SIZE);
                     return;
                 }
             }
-            lexemeCol.setMinWidth(349);
+            if (type.equals("Identifier")){
+                lexemeCol.setMinWidth(169);
+                lexemeCol.setMaxWidth(169);
+            }else{
+                lexemeCol.setMinWidth(349);
+                lexemeCol.setMaxWidth(349);
+            }
         });
         if (!tokensTable.getItems().isEmpty()) {
             tokensTable.getColumns().add(lexemeCol);
+            if(type.equals("Identifier")){
+                tokensTable.getColumns().add(typeCol);
+            }
             return tokensTable;
         } else {
             return null;

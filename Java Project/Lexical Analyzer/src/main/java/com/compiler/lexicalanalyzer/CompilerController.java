@@ -20,8 +20,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
-import static java.lang.Long.MAX_VALUE;
-
 public class CompilerController implements Initializable {
 
     FileChooser fileChooser = new FileChooser();
@@ -71,7 +69,7 @@ public class CompilerController implements Initializable {
             e.printStackTrace();
         }
     }
-    String [] tokenType = {"Keyword", "Identifier", "Operator", "Integer", "Float", "String", "Char", "Punctuation"};
+    String [] tokenType = {"Keyword", "Identifier", "Operator", "Integer", "Float", "Long", "Long Long", "String Literal", "Char Literal", "Punctuation", "BadString"};
     @FXML
     void scanCode(MouseEvent event) {
         if (file == null)
@@ -130,20 +128,18 @@ public class CompilerController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fileChooser.setInitialDirectory(new File("../../"));
-        codeArea.scrollTopProperty().addListener((observable, oldValue, newValue) -> {
-            lineArea.setScrollTop(newValue.doubleValue());
-        });
+        fileChooser.setInitialDirectory(new File("../../TestCases"));
+        codeArea.scrollTopProperty().addListener((observable, oldValue, newValue) -> lineArea.setScrollTop(newValue.doubleValue()));
         viewWindow.getStyleClass().add("hideView");
         codeArea.getStyleClass().add("text-area");
-        codeArea.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
+        codeArea.layoutBoundsProperty().addListener(new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
                 Node content = codeArea.lookup(".content");
                 if (content != null && !codeArea.getText().isEmpty()) {
                     double contentWidth = content.getBoundsInLocal().getWidth();
                     double textAreaWidth = newValue.getWidth();
-                    if (contentWidth > textAreaWidth-6) {
+                    if (contentWidth > textAreaWidth - 6) {
                         lineArea.setPadding(new Insets(0, 0, 13, 0));
                     } else {
                         lineArea.setPadding(new Insets(0, 0, 0, 0));

@@ -318,9 +318,18 @@ public class LexicalAnalyzer {
             System.out.println();
         }
     }
+    public List<Token> getTokens() {
+        return tokens;
+    }
+    public LexicalAnalyzer start(LexicalAnalyzer analyzer,String directory){
+        analyzer.tokenize(directory);
+        analyzer.typeOf();
+        analyzer.printTokens();
+        return analyzer;
+    }
     public static void main(String[] args)  {
         LexicalAnalyzer analyzer = new LexicalAnalyzer();
-        String directory = "D:\\Maeen\\UNI Documents\\OneDrive - Faculty of Engineering Ain Shams University\\Junior\\Spring 2024\\Design of Compilers\\Project\\Design-Of-Compiler\\test.txt";
+        String directory = "../../TestCases/Test1.c";
         analyzer.tokenize(directory);
         analyzer.typeOf();
         analyzer.printTokens();

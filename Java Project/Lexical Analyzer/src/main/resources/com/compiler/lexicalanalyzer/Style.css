@@ -3,7 +3,12 @@
     -fx-max-width: 400px;
 }
 
-.hideView{
+.showSymbolTable{
+    -fx-min-width: 600px;
+    -fx-max-width: 600px;
+}
+
+.hide{
     -fx-min-width: 0px;
     -fx-max-width: 0px;
 }

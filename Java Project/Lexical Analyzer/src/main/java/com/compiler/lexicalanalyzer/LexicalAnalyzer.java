@@ -32,17 +32,28 @@ public class LexicalAnalyzer {
             return IdType;
         }
     }
-    private class SymbolTable {
+    protected class SymbolTable {
         String name;
         String type;
         String ID;
-        int size;
-        ArrayList<Integer> line_of_refrences = new ArrayList<>();
-        SymbolTable(String name, String type,String ID, int size) {
+
+        ArrayList<Integer> line_of_references = new ArrayList<>();
+        SymbolTable(String name, String type,String ID) {
             this.name = name;
             this.type = type;
             this.ID = ID;
-            this.size = size;
+        }
+        public String getName() {
+            return name;
+        }
+        public String getType() {
+            return type;
+        }
+        public String getID() {
+            return ID;
+        }
+        public ArrayList<Integer> getLine_of_references() {
+            return line_of_references;
         }
     }
 
@@ -251,7 +262,7 @@ public class LexicalAnalyzer {
                     }
                 }
                 if (!exists) {
-                    symbolTableRow.add(new SymbolTable(token.Lexeme, token.IdType,"id".concat(String.valueOf(counter++)),0));
+                    symbolTableRow.add(new SymbolTable(token.Lexeme, token.IdType,"id".concat(String.valueOf(counter++))));
                 }
             }
         }
@@ -288,7 +299,7 @@ public class LexicalAnalyzer {
                     Matcher matcher = pattern.matcher(line);
                     // If the symbol name is found as a standalone word, add the line number
                     if (matcher.find()) {
-                        symbol.line_of_refrences.add(lineNumber);
+                        symbol.line_of_references.add(lineNumber);
                     }
                 }
             }
@@ -307,12 +318,12 @@ public class LexicalAnalyzer {
 
         for (SymbolTable symbol : symbolTableRow) {
             // Check if the symbol has any lines of references before attempting to print
-            if(!symbol.line_of_refrences.isEmpty()) {
+            if(!symbol.line_of_references.isEmpty()) {
                 // Print the first part of the row including the ID, name, type, size, and the first line of declaration
-                System.out.printf(rowFormat, symbol.ID, symbol.name, symbol.type, symbol.size, symbol.line_of_refrences.getFirst());
+                System.out.printf(rowFormat, symbol.ID, symbol.name, symbol.type, symbol.line_of_references.getFirst());
             }
-            for (int line=1;line<symbol.line_of_refrences.size(); line++)
-                System.out.print(symbol.line_of_refrences.get(line) + " ");
+            for (int line = 1; line<symbol.line_of_references.size(); line++)
+                System.out.print(symbol.line_of_references.get(line) + " ");
 
             // After printing all lines of references for the current symbol, move to the next line
             System.out.println();
@@ -321,9 +332,13 @@ public class LexicalAnalyzer {
     public List<Token> getTokens() {
         return tokens;
     }
+    public List<SymbolTable> getSymbolTable() {
+        return symbolTableRow;
+    }
     public LexicalAnalyzer start(LexicalAnalyzer analyzer,String directory){
         analyzer.tokenize(directory);
         analyzer.typeOf();
+        analyzer.SymbolTableMaker(directory);
 //        analyzer.printTokens();
         return analyzer;
     }
@@ -332,8 +347,8 @@ public class LexicalAnalyzer {
         String directory = "../../TestCases/Test1.c";
         analyzer.tokenize(directory);
         analyzer.typeOf();
-        analyzer.printTokens();
-        //analyzer.SymbolTableMaker(directory);
-        //analyzer.printSymbolTable();
+//        analyzer.printTokens();
+        analyzer.SymbolTableMaker(directory);
+        analyzer.printSymbolTable();
     }
 }

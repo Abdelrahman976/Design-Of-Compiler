@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+
 public class CompilerController implements Initializable {
 
     FileChooser fileChooser = new FileChooser();
@@ -41,20 +42,23 @@ public class CompilerController implements Initializable {
     @FXML
     void readCode(MouseEvent event) {
         file = fileChooser.showOpenDialog(new Stage());
-        if (file != null)
-            previousFile = file;
-        else if(previousFile == null)
+        if (file != null){
+            previousFile = file;}
+        else if(previousFile == null){
+            codeArea.setScrollTop(0);
             return;
+        }
         else{
             file = previousFile;
+            codeArea.setScrollTop(0);
             return;
         }
         try {
             Scanner scanner = new Scanner(file);
-            if (!codeArea.equals("")) {
+            if (!codeArea.getText().isEmpty()) {
                 lineArea.clear();
                 codeArea.clear();
-                viewWindow.getStyleClass().add("hideView");
+                viewWindow.getStyleClass().add("hide");
                 viewWindow.getStyleClass().removeAll("showView");
                 vboxView.getChildren().clear();
             }
@@ -65,6 +69,8 @@ public class CompilerController implements Initializable {
                 lineArea.appendText(i + "\n");
                 codeArea.appendText(scanner.nextLine() + "\n");
             }
+            lexicalAnalyzer = lexicalAnalyzer.start(new LexicalAnalyzer(),file.getAbsolutePath());
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -77,9 +83,9 @@ public class CompilerController implements Initializable {
         else if(!vboxView.getChildren().isEmpty()){
             new Alert("Info","Code already scanned!", "blue");
         }else {
-            viewWindow.getStyleClass().removeAll("hideView");
+            codeArea.setScrollTop(0);
+            viewWindow.getStyleClass().removeAll("hide");
             viewWindow.getStyleClass().add("showView");
-            lexicalAnalyzer = lexicalAnalyzer.start(new LexicalAnalyzer(),file.getAbsolutePath());
             for (String type : tokenType) {
                 TableView<LexicalAnalyzer.Token> table = createTable(type);
                 if (table != null){
@@ -93,20 +99,14 @@ public class CompilerController implements Initializable {
         TableView<LexicalAnalyzer.Token> tokensTable = new TableView<>();
         tokensTable.setMinHeight(250);
         tokensTable.getStyleClass().add("table-view");
-        tokensTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        tokensTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableColumn<LexicalAnalyzer.Token, String> lexemeCol = new TableColumn<>(type);
         lexemeCol.setCellValueFactory(new PropertyValueFactory<>("Lexeme"));
         lexemeCol.setResizable(true);
         lexemeCol.setEditable(false);
-        TableColumn<LexicalAnalyzer.Token, String> typeCol = new TableColumn<>("Type");
-        typeCol.setCellValueFactory(new PropertyValueFactory<>("IdType"));
-        typeCol.setResizable(true);
-        typeCol.setEditable(false);
         tokensTable.getItems().clear();
         for (LexicalAnalyzer.Token token : lexicalAnalyzer.getTokens()){
-            if (token.IdType != null && token.Tokentype.equals("Identifier") && token.Tokentype.equals(type)){
-                tokensTable.getItems().add(token);
-            } else if(token.Tokentype.equals(type)){
+            if(token.Tokentype.equals(type)){
                 tokensTable.getItems().add(token);
             }
         }
@@ -119,20 +119,71 @@ public class CompilerController implements Initializable {
                     return;
                 }
             }
-            if (type.equals("Identifier")){
-                lexemeCol.setMinWidth(169);
-                lexemeCol.setMaxWidth(169);
-            }else{
-                lexemeCol.setMinWidth(349);
-                lexemeCol.setMaxWidth(349);
-            }
         });
         if (!tokensTable.getItems().isEmpty()) {
             tokensTable.getColumns().add(lexemeCol);
-            if(type.equals("Identifier")){
-                tokensTable.getColumns().add(typeCol);
-            }
             return tokensTable;
+        } else {
+            return null;
+        }
+    }
+
+    @FXML
+    void symbolTable(MouseEvent event) {
+        if (file == null)
+            new Alert("Error","Please select a file to show its symbol table!", "red");
+        else if(!vboxView.getChildren().isEmpty()){
+            new Alert("Info","Symbol Table already created!", "blue");
+        }else {
+            codeArea.setScrollTop(0);
+            viewWindow.getStyleClass().removeAll("hide");
+            viewWindow.getStyleClass().add("showSymbolTable");
+            TableView<LexicalAnalyzer.SymbolTable> table = createSymbolTable();
+            vboxView.getChildren().add(table);
+        }
+    }
+
+    private TableView<LexicalAnalyzer.SymbolTable> createSymbolTable(){
+        TableView<LexicalAnalyzer.SymbolTable> symbolTable = new TableView<>();
+//        symbolTable.setMinHeight(250);
+        symbolTable.setMinHeight(700);
+        symbolTable.setMinWidth(700);
+        symbolTable.getStyleClass().add("table-view");
+        symbolTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        TableColumn<LexicalAnalyzer.SymbolTable, String> idCol = new TableColumn<>("ID");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        idCol.setResizable(true);
+        idCol.setEditable(false);
+        TableColumn<LexicalAnalyzer.SymbolTable, String> nameCol = new TableColumn<>("Name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameCol.setResizable(true);
+        nameCol.setEditable(false);
+        TableColumn<LexicalAnalyzer.SymbolTable, String> typeCol = new TableColumn<>("Type");
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+        typeCol.setResizable(true);
+        typeCol.setEditable(false);
+        TableColumn<LexicalAnalyzer.SymbolTable, String> lineOfDecCol = new TableColumn<>("Line of Declaration");
+        lineOfDecCol.setCellValueFactory(new PropertyValueFactory<>("line_of_references"));
+        lineOfDecCol.setResizable(true);
+        lineOfDecCol.setEditable(false);
+        TableColumn<LexicalAnalyzer.SymbolTable, String> lineOfRefCol = new TableColumn<>("Line of Reference");
+        lineOfRefCol.setCellValueFactory(new PropertyValueFactory<>("line_of_references"));
+        lineOfRefCol.setResizable(true);
+        lineOfRefCol.setEditable(false);
+        symbolTable.getItems().clear();
+        for (LexicalAnalyzer.SymbolTable row : lexicalAnalyzer.getSymbolTable()){
+            System.out.println(row.line_of_references);
+
+            symbolTable.getItems().add(row);
+        }
+        if (!symbolTable.getItems().isEmpty()) {
+//            symbolTable.getColumns().add(idCol);
+//            symbolTable.getColumns().add(nameCol);
+//            symbolTable.getColumns().add(typeCol);
+//            symbolTable.getColumns().add(lineOfDecCol);
+//            symbolTable.getColumns().add(lineOfRefCol);
+            symbolTable.getColumns().addAll(idCol,nameCol, typeCol, lineOfDecCol, lineOfRefCol);
+            return symbolTable;
         } else {
             return null;
         }
@@ -146,7 +197,7 @@ public class CompilerController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         fileChooser.setInitialDirectory(new File("../../TestCases"));
         codeArea.scrollTopProperty().addListener((observable, oldValue, newValue) -> lineArea.setScrollTop(newValue.doubleValue()));
-        viewWindow.getStyleClass().add("hideView");
+        viewWindow.getStyleClass().add("hide");
         codeArea.getStyleClass().add("text-area");
         codeArea.layoutBoundsProperty().addListener(new ChangeListener<>() {
             @Override

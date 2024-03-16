@@ -14,27 +14,35 @@
 
 <VBox maxHeight="1.7976931348623157E308" prefHeight="600.0" prefWidth="962.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.compiler.lexicalanalyzer.CompilerController">
     <children>
-        <SplitPane dividerPositions="0.5797705943691345" focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="997.0" VBox.vgrow="ALWAYS">
+        <SplitPane dividerPositions="0.5802083333333333" focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="997.0" VBox.vgrow="ALWAYS">
             <items>
             <VBox alignment="CENTER" minWidth="550.0" prefHeight="597.0" prefWidth="553.0">
                <children>
-                  <AnchorPane prefHeight="47.0" prefWidth="553.0">
+                  <AnchorPane prefHeight="52.0" prefWidth="554.0">
                      <children>
-                        <Label layoutX="20.0" layoutY="10.0" text="&lt;/&gt; Code:">
+                        <Label layoutX="20.0" layoutY="13.0" text="&lt;/&gt; Code:" textAlignment="CENTER">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
+                        <JFXButton graphicTextGap="10.0" layoutX="401.0" layoutY="5.0" minWidth="130.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: #3949ab; -fx-border-radius: 5; -fx-background-color: #3949ab; -fx-border-width: 2;" text="Choose File" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="10.0">
+                           <graphic>
+                              <FontAwesomeIcon fill="WHITE" glyphName="FILE_CODE_ALT" size="1.3em" text="" textAlignment="CENTER" wrappingWidth="14.142857551574707" />
+                           </graphic>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </JFXButton>
                      </children>
                   </AnchorPane>
-                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" VBox.vgrow="ALWAYS">
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="466.0" prefWidth="554.0" style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent;" VBox.vgrow="ALWAYS">
                             <children>
                                 <TextArea fx:id="lineArea" disable="true" editable="false" layoutX="40.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="476.0" prefWidth="59.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="Cascadia Code Regular" size="13.0" />
                            </font>
                         </TextArea>
-                                <TextArea fx:id="codeArea" editable="false" focusTraversable="false" layoutX="64.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="476.0" prefWidth="490.0" style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-text-fill: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0">
+                                <TextArea fx:id="codeArea" editable="false" focusTraversable="false" layoutX="84.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="476.0" prefWidth="500.0" style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-text-fill: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="Cascadia Code Regular" size="13.0" />
                            </font>
@@ -60,20 +68,20 @@
                         </AnchorPane>
                   <HBox alignment="CENTER" fillHeight="false" maxHeight="80.0" minHeight="80.0" prefHeight="130.0" prefWidth="553.0" spacing="30.0" VBox.vgrow="NEVER">
                      <children>
-                        <JFXButton graphicTextGap="10.0" minWidth="130.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: #3949ab; -fx-border-radius: 5; -fx-background-color: #3949ab; -fx-border-width: 2;" text="Choose File" textAlignment="CENTER" textFill="WHITE">
-                           <graphic>
-                              <FontAwesomeIcon fill="WHITE" glyphName="FILE_CODE_ALT" size="1.3em" text="" textAlignment="CENTER" wrappingWidth="14.142857551574707" />
-                           </graphic>
-                           <font>
-                              <Font name="System Bold" size="14.0" />
-                           </font>
-                        </JFXButton>
                         <JFXButton graphicTextGap="10.0" minWidth="130.0" onMouseClicked="#scanCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: #3949ab; -fx-border-radius: 5; -fx-background-color: #3949ab; -fx-border-width: 2;" text="Scan Code" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                            <graphic>
                               <FontAwesomeIcon fill="WHITE" glyphName="SEARCH" size="1.3em" textAlignment="CENTER" wrappingWidth="14.142857551574707" />
+                           </graphic>
+                        </JFXButton>
+                        <JFXButton minWidth="130.0" onMouseClicked="#symbolTable" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: #3949ab; -fx-border-radius: 5; -fx-background-color: #3949ab; -fx-border-width: 2;" text="Symbol Table" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIcon fill="WHITE" glyphName="TABLE" selectionEnd="0" size="1.3em" />
                            </graphic>
                         </JFXButton>
                         <JFXButton minWidth="130.0" onMouseClicked="#parseCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: #3949ab; -fx-border-radius: 5; -fx-background-color: #3949ab; -fx-border-width: 2;" text="Parse Code" textFill="WHITE">

@@ -34,7 +34,7 @@ public class Alert {
 
         JFXButton ok = new JFXButton("OK");
         ok.setFocusTraversable(false);
-        ok.setStyle("-fx-background-radius:15;-fx-focus-color:transparent;-fx-faint-focus-color:transparent;-fx-cursor:hand;-fx-border-color: black");
+        ok.setStyle("-fx-background-radius:15;-fx-focus-color:transparent;-fx-faint-focus-color:transparent;-fx-cursor:hand;-fx-border-color: black;-fx-border-radius: 15");
         ok.setPadding(new Insets(10,20,10,20));
         ok.setOnAction(e -> alertStage.close());
 
@@ -65,7 +65,7 @@ public class Alert {
         msg.setPadding(new Insets(0,20,5,20));
 
         JFXButton btn1 = new JFXButton(btnLabel1);
-        btn1.setStyle("-fx-background-color:lightgrey;-fx-background-radius:15;-fx-focus-color:transparent;-fx-faint-focus-color:transparent;-fx-cursor:hand;-fx-border-color: black");
+        btn1.setStyle("-fx-background-color:lightgrey;-fx-background-radius:15;-fx-focus-color:transparent;-fx-faint-focus-color:transparent;-fx-cursor:hand;-fx-border-color: black;-fx-border-radius: 15");
         btn1.setPadding(new Insets(10,20,10,20));
         btn1.setFocusTraversable(false);;
         btn1.setOnAction(e -> {
@@ -74,7 +74,7 @@ public class Alert {
         });
 
         JFXButton btn2 = new JFXButton(btnLabel2);
-        btn2.setStyle("-fx-background-color:lightgrey;-fx-background-radius:15;-fx-focus-color:transparent;-fx-faint-focus-color:transparent;-fx-cursor:hand;-fx-border-color: black");
+        btn2.setStyle("-fx-background-color:lightgrey;-fx-background-radius:15;-fx-focus-color:transparent;-fx-faint-focus-color:transparent;-fx-cursor:hand;-fx-border-color: black;-fx-border-radius: 15");
         btn2.setPadding(new Insets(10,20,10,20));
         btn2.setFocusTraversable(false);
         btn2.setOnAction(e -> {

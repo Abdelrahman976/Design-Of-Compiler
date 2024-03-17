@@ -36,13 +36,11 @@ public class LexicalAnalyzer {
         String name;
         String type;
         String ID;
-        int size;
         ArrayList<Integer> line_of_refrences = new ArrayList<>();
-        SymbolTable(String name, String type,String ID, int size) {
+        SymbolTable(String name, String type,String ID) {
             this.name = name;
             this.type = type;
             this.ID = ID;
-            this.size = size;
         }
     }
 
@@ -56,7 +54,7 @@ public class LexicalAnalyzer {
         String fileContent = new String(fileBytes); // Use the appropriate character encoding if known
         fileContent = fileContent.replaceAll("//.*|(?s)/\\*.*?\\*/", ""); // remove comments
         fileContent = fileContent.replaceAll("#include\\s*[\"<][^\">]+[\">](\\r?\\n|\\r)", "");// remove libraries
-
+        fileContent = fileContent.replaceAll("#(ifdef|endif|define|undef|if|else|elif)\\s*.*?(\\r?\\n|\\r)", "");
         return new BufferedReader(new StringReader(fileContent));
     }
 
@@ -251,7 +249,7 @@ public class LexicalAnalyzer {
                     }
                 }
                 if (!exists) {
-                    symbolTableRow.add(new SymbolTable(token.Lexeme, token.IdType,"id".concat(String.valueOf(counter++)),0));
+                    symbolTableRow.add(new SymbolTable(token.Lexeme, token.IdType,"id".concat(String.valueOf(counter++))));
                 }
             }
         }
@@ -299,17 +297,17 @@ public class LexicalAnalyzer {
     }
     public void printSymbolTable() {
         // Header
-        String headerFormat = "%-8s %-25s %-15s %-10s %-25s %-20s\n";
-        System.out.printf(headerFormat, "ID", "Name", "Type", "Size", "Line of Declaration", "Lines of References");
+        String headerFormat = "%-8s %-25s %-15s %-25s %-20s\n";
+        System.out.printf(headerFormat, "ID", "Name", "Type", "Line of Declaration", "Lines of References");
 
         // Data rows
-        String rowFormat = "%-8s %-25s %-15s %-10d %-25d ";
+        String rowFormat = "%-8s %-25s %-15s %-25d ";
 
         for (SymbolTable symbol : symbolTableRow) {
             // Check if the symbol has any lines of references before attempting to print
             if(!symbol.line_of_refrences.isEmpty()) {
                 // Print the first part of the row including the ID, name, type, size, and the first line of declaration
-                System.out.printf(rowFormat, symbol.ID, symbol.name, symbol.type, symbol.size, symbol.line_of_refrences.getFirst());
+                System.out.printf(rowFormat, symbol.ID, symbol.name, symbol.type, symbol.line_of_refrences.getFirst());
             }
             for (int line=1;line<symbol.line_of_refrences.size(); line++)
                 System.out.print(symbol.line_of_refrences.get(line) + " ");
@@ -329,11 +327,11 @@ public class LexicalAnalyzer {
     }
     public static void main(String[] args)  {
         LexicalAnalyzer analyzer = new LexicalAnalyzer();
-        String directory = "../../TestCases/Test1.c";
+        String directory = "D:\\Semester 6\\Design of Compilers\\Project\\TestCases\\Test1.c";
         analyzer.tokenize(directory);
         analyzer.typeOf();
-        analyzer.printTokens();
-        //analyzer.SymbolTableMaker(directory);
-        //analyzer.printSymbolTable();
+        //analyzer.printTokens();
+        analyzer.SymbolTableMaker(directory);
+        analyzer.printSymbolTable();
     }
 }

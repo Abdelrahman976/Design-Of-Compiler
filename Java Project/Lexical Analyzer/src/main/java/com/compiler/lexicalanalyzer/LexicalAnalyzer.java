@@ -81,7 +81,8 @@ public class LexicalAnalyzer {
             temp1.clear();
             //printTokens(temp2);
             Pattern Filter3 = Pattern.compile(
-                    "[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
+                    "[0-9][bB][0-9]+|[0-9][xX][0-9a-zA-z]+|0[0-9]+"
+                    +"[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
                     +"|\\+\\+|\\+|--|-|\\*|"
                     +"#|<[^>]*>"
             );
@@ -132,10 +133,10 @@ public class LexicalAnalyzer {
         String charsPattern = "'.?'"; // Matches char literals
         String operatorsPattern = "~|:|#|\\*|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-/%&|.!^=<>]+"; // Simple example for common operators
         String punctuationPattern = "([()\\[\\]{},;?\"])"; // Common punctuation marks
-        String LongPattern= "[0-9]+\\.?[0-9]*(L|UL|l|ul)"; // Matches long numbers
-        String LongLongPattern= "[0-9]+\\.?[0-9]*(ULL|LL|ull|ll)"; // Matches long numbers
-        String integersPattern = "[-+]?[0-9]+|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|((\\+-)*\\+?|(-\\+)*-?)(0|[1-9][0-9]*)"; // Matches integer numbers
-        String floatsPattern = "[-+]?([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?([fF])|[0-9]+f|((-\\+)*-?)(0|[1-9][0-9]*[.])?[0-9]+([eE][-+]?\\d+)?"; // Matches floating-point numbers
+        String LongPattern= "[1-9][0-9]*\\.?[0-9]*(L|UL|l|ul)"; // Matches long numbers
+        String LongLongPattern= "[1-9][0-9]*\\.?[0-9]*(ULL|LL|ull|ll)"; // Matches long numbers
+        String integersPattern = "(0|[-+]?[1-9][0-9]*)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|((\\+-)*\\+?|(-\\+)*-?)(0|[1-9][0-9]*)"; // Matches integer numbers
+        String floatsPattern = "[-+]?((0\\.)|[1-9][0-9]*\\.)?[1-9][0-9]*([eE][-+]?\\d+)?([fF])|[1-9][0-9]*f|((-\\+)*-?)((0\\.)|[1-9][0-9]*\\.)?[1-9][0-9]*([eE][-+]?\\d+)?"; // Matches floating-point numbers
         String keywordsPattern = "(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|restrict|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while)";
         String identifier = "[_a-zA-Z][_a-zA-Z0-9]*"; // identifier
 //        String BadStringPattern = "[0-9]+[_a-zA-Z][_a-zA-Z0-9]*"; // Matches badString literals
@@ -195,7 +196,14 @@ public class LexicalAnalyzer {
             } else if (lexemes.get(i).matches(LongPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Long"));
             } else if (lexemes.get(i).matches(integersPattern)) {
-                tokens.add(new Token(lexemes.get(i), "Integer"));
+                 if(lexemes.get(i).matches("0[xX][0-9a-fA-F]+"))
+                        tokens.add(new Token(lexemes.get(i), "Hexadecimal"));
+                    else if(lexemes.get(i).matches("0[0-7]+"))
+                        tokens.add(new Token(lexemes.get(i), "Octal"));
+                    else if(lexemes.get(i).matches("0[bB][01]+"))
+                        tokens.add(new Token(lexemes.get(i), "Binary"));
+                    else
+                        tokens.add(new Token(lexemes.get(i), "Integer"));
             } else if (lexemes.get(i).matches(floatsPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Float"));
             } else if (lexemes.get(i).matches(keywordsPattern)) {
@@ -218,11 +226,11 @@ public class LexicalAnalyzer {
                 }
                 else if(i!=0 && lexemes.get(i-1).matches("typedef") && lexemes.get(i+1).matches(";")){
                     tokens.getLast().IdType = "Typedef";
-                } else if (i!=0 && (lexemes.get(i-1).matches("int|float|char|double|long|short|string") || lexemes.get(i-1).matches(identifier))){
+                } else if (i!=0 && (lexemes.get(i-1).matches("int|float|char|double|long|short|,") || lexemes.get(i-1).matches(identifier))){
                     tokens.getLast().IdType = "Variable";
                 }
             } else  {
-                tokens.add(new Token(lexemes.get(i), "BadString"));
+                tokens.add(new Token(lexemes.get(i), "Error"));
             }
         }
     }
@@ -301,7 +309,6 @@ public class LexicalAnalyzer {
         if (inlineParts.length > 0) {
             line = inlineParts[0]; // Keep only the part before the inline comment
         }
-        // Process the line...
     }
     public void printSymbolTable() {
         // Header
@@ -338,8 +345,8 @@ public class LexicalAnalyzer {
         String directory = "D:\\Semester 6\\Design of Compilers\\Project\\TestCases\\Test6.c";
         analyzer.tokenize(directory);
         analyzer.typeOf();
-//        analyzer.printTokens();
-        analyzer.SymbolTableMaker(directory);
-        analyzer.printSymbolTable();
+        analyzer.printTokens();
+//        analyzer.SymbolTableMaker(directory);
+//        analyzer.printSymbolTable();
     }
 }

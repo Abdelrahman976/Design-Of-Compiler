@@ -1,3 +1,9 @@
+#define pi 3.14
+#ifdef
+#elifdef
+#else
+#include <stdio.h>
+#include"ddsdsds"
 int 0ull=5;
 int iffy;
 int x= "hehehe;
@@ -55,13 +61,13 @@ void compare(int a, int b, int c, int d) {
             printf("gamed brdo 3ady");
         }
 }
-    
+
 int main() {
 
     short item_quantity_456 = 32767;
     long long total_assets_415 = 9223372036854775807LL;
     unsigned long long database_entries_930 = 18446744073709551615ULL;
-    long double speed_of_light_373839 = 3.14159265358979323846L;
+    long double speed_of_light_373 = 3.14159265358979323846L;
 
     // Other data types
     _Bool is_active_404 = true;
@@ -78,7 +84,7 @@ int main() {
     bool or_result = !p || q;
     printf("%s\n", and_result ? "true" : "false");
     printf("%s\n", or_result ? "true" : "false");
-  
+
     printf("p ^ q = %d\n", p ^ q, ~p);
     printf("p << 1 = %d\n", p << 1);
     printf("\n");
@@ -88,19 +94,19 @@ int main() {
         printf("%d\n", j);
         j*= 2;
     } while (j <= 10);
-    
+
     //sizeof operator
     printf("Size of int: %zu bytes\n", sizeof(int));
-    
-struct child { 
-    int x; 
-    char c; 
-}; 
-// parent structure declaration 
-struct parent { 
-    int a; 
-    struct child b; 
-}; 
+
+struct child {
+    int x;
+    char c;
+};
+// parent structure declaration
+struct parent {
+    int a;
+    struct child b;
+};
 
 enum Days {
     MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY

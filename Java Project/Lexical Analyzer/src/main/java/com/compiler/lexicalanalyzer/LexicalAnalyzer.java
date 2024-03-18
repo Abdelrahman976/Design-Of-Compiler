@@ -249,7 +249,7 @@ public class LexicalAnalyzer {
         }
     }
     public void SymbolTableMaker(String directory){
-        int counter=1;
+        int counter = 1;
         for (Token token : tokens) {
             if (token.Tokentype.equals("Identifier")) {
                 boolean exists = false;
@@ -270,51 +270,50 @@ public class LexicalAnalyzer {
             boolean inBlockComment = false;
             while ((line = infile.readLine()) != null) {
                 lineNumber++;
+                // Skip lines that start with #
+                if (line.trim().startsWith("#"))
+                    continue;
+
                 if (inBlockComment) {
                     if (line.contains("*/")) {
                         inBlockComment = false;
-                        String[] parts = line.split("\\*/", -1);
-                        if (parts.length > 1) {
-                            // Process the part before the end of the block comment
-                            processLine(parts[0]);
-                            // Process the part after the end of the block comment
-                            processLine(parts[1]);
-                        }
-                    }
-                } else {
-                    String[] blockParts = line.split("/\\*", -1);
-                    if (blockParts.length > 1) {
-                        inBlockComment = true;
-                        // Process the part before the start of the block comment
-                        processLine(blockParts[0]);
+                        // Process the line after the end of a block comment, if there's code after it
+                        line = line.substring(line.indexOf("*/") + 2);
+                        // Only continue processing if there's actual code beyond the comment
+                        if(line.trim().isEmpty()) continue;
                     } else {
-                        // Process the whole line if there's no block comment
-                        processLine(line);
+                        // Skip the entire line since it's within block comments
+                        continue;
                     }
-
+                } else if (line.contains("/*")) {
+                    String[] parts = line.split("/\\*", 2);
+                    line = parts[0];
+                    if (parts[1].contains("*/")) {
+                        line += parts[1].substring(parts[1].indexOf("*/") + 2);
+                    } else {
+                        inBlockComment = true;
+                    }
                 }
+                // Remove inline comments
+                line = processLine(line);
 
                 for (SymbolTable symbol : symbolTableRow) {
-                    // Create a pattern that matches the symbol name as a standalone word
                     Pattern pattern = Pattern.compile("(?<!%)\\b" + symbol.name + "\\b");
                     Matcher matcher = pattern.matcher(line);
-                    // If the symbol name is found as a standalone word, add the line number
                     if (matcher.find()) {
                         symbol.line_of_refrences.add(lineNumber);
                     }
                 }
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Error opening input file: " + e.getMessage());
         }
     }
-    private void processLine(String line) {
+    private String processLine(String line) {
         String[] inlineParts = line.split("//", -1);
-        if (inlineParts.length > 0) {
-            line = inlineParts[0]; // Keep only the part before the inline comment
-        }
+        return inlineParts[0]; // Return only the part before the inline comment
     }
+
     public void printSymbolTable() {
         // Header
         String headerFormat = "%-8s %-25s %-15s %-25s %-20s\n";
@@ -350,8 +349,8 @@ public class LexicalAnalyzer {
         String directory = "D:\\Semester 6\\Design of Compilers\\Project\\TestCases\\Test6.c";
         analyzer.tokenize(directory);
         analyzer.typeOf();
-        analyzer.printTokens();
-//        analyzer.SymbolTableMaker(directory);
-//        analyzer.printSymbolTable();
+//        analyzer.printTokens();
+        analyzer.SymbolTableMaker(directory);
+        analyzer.printSymbolTable();
     }
 }

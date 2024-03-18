@@ -81,7 +81,7 @@ public class LexicalAnalyzer {
             temp1.clear();
             //printTokens(temp2);
             Pattern Filter3 = Pattern.compile(
-                    "[0-9][bB][0-9]+|[0-9][xX][0-9a-zA-z]+|0[0-9]+"
+                    "\'(?:[^\\\\']|\\\\.)\'|[0-9][bB][0-9]+|[0-9][xX][0-9a-zA-z]+|0[0-9]+"
                     +"[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
                     +"|\\+\\+|\\+|--|-|\\*|"
                     +"#|<[^>]*>"
@@ -132,7 +132,7 @@ public class LexicalAnalyzer {
         String stringsPattern = "\".*\""; // Matches string literals
         String charsPattern = "'.?'"; // Matches char literals
         String operatorsPattern = "~|:|#|\\*|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-/%&|.!^=<>]+"; // Simple example for common operators
-        String punctuationPattern = "([()\\[\\]{},;?\"])"; // Common punctuation marks
+        String punctuationPattern = "([()\\[\\]{},;?'\"])"; // Common punctuation marks
         String LongPattern= "[1-9][0-9]*\\.?[0-9]*(L|UL|l|ul)"; // Matches long numbers
         String LongLongPattern= "[1-9][0-9]*\\.?[0-9]*(ULL|LL|ull|ll)"; // Matches long numbers
         String integersPattern = "(0|[-+]?[1-9][0-9]*)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|((\\+-)*\\+?|(-\\+)*-?)(0|[1-9][0-9]*)"; // Matches integer numbers
@@ -355,8 +355,8 @@ public class LexicalAnalyzer {
         String directory = "D:\\Semester 6\\Design of Compilers\\Project\\TestCases\\Test6.c";
         analyzer.tokenize(directory);
         analyzer.typeOf();
-//        analyzer.printTokens();
-        analyzer.SymbolTableMaker(directory);
-        analyzer.printSymbolTable();
+        analyzer.printTokens();
+//        analyzer.SymbolTableMaker(directory);
+//        analyzer.printSymbolTable();
     }
 }

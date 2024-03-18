@@ -81,8 +81,8 @@ public class LexicalAnalyzer {
             temp1.clear();
             //printTokens(temp2);
             Pattern Filter3 = Pattern.compile(
-                    "[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z]+[0-9]*|>>=?|<<=?|==?|!=|->|<=|>=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
-                    +"|\\+\\+|\\+|--|-|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|\\*|"
+                    "[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
+                    +"|\\+\\+|\\+|--|-|\\*|"
                     +"#|<[^>]*>"
             );
 
@@ -99,8 +99,7 @@ public class LexicalAnalyzer {
         for (String token : y) {
             Matcher matcher = x.matcher(token);
             while (matcher.find()) {
-                String match = matcher.group();
-                z.add(match);
+                z.add(matcher.group());
             }
         }
     }
@@ -238,8 +237,7 @@ public class LexicalAnalyzer {
     }
     public void SymbolTableMaker(String directory){
         int counter=1;
-        for (int i = 0; i < tokens.size(); i++) {
-            Token token = tokens.get(i);
+        for (Token token : tokens) {
             if (token.Tokentype.equals("Identifier")) {
                 boolean exists = false;
                 for (SymbolTable symbol : symbolTableRow) {
@@ -249,7 +247,7 @@ public class LexicalAnalyzer {
                     }
                 }
                 if (!exists) {
-                    symbolTableRow.add(new SymbolTable(token.Lexeme, token.IdType,"id".concat(String.valueOf(counter++))));
+                    symbolTableRow.add(new SymbolTable(token.Lexeme, token.IdType, "id".concat(String.valueOf(counter++))));
                 }
             }
         }
@@ -263,21 +261,24 @@ public class LexicalAnalyzer {
                     if (line.contains("*/")) {
                         inBlockComment = false;
                         String[] parts = line.split("\\*/", -1);
-                        if (parts.length > 0) {
-                            line = parts[0]; // Keep only the part before the end of the block comment
+                        if (parts.length > 1) {
+                            // Process the part before the end of the block comment
+                            processLine(parts[0]);
+                            // Process the part after the end of the block comment
+                            processLine(parts[1]);
                         }
                     }
                 } else {
                     String[] blockParts = line.split("/\\*", -1);
                     if (blockParts.length > 1) {
                         inBlockComment = true;
-                        line = blockParts[0]; // Keep only the part before the start of the block comment
+                        // Process the part before the start of the block comment
+                        processLine(blockParts[0]);
+                    } else {
+                        // Process the whole line if there's no block comment
+                        processLine(line);
                     }
 
-                    String[] inlineParts = line.split("//", -1);
-                    if (inlineParts.length > 0) {
-                        line = inlineParts[0]; // Keep only the part before the inline comment
-                    }
                 }
 
                 for (SymbolTable symbol : symbolTableRow) {
@@ -294,6 +295,13 @@ public class LexicalAnalyzer {
         catch (IOException e) {
             System.out.println("Error opening input file: " + e.getMessage());
         }
+    }
+    private void processLine(String line) {
+        String[] inlineParts = line.split("//", -1);
+        if (inlineParts.length > 0) {
+            line = inlineParts[0]; // Keep only the part before the inline comment
+        }
+        // Process the line...
     }
     public void printSymbolTable() {
         // Header
@@ -327,10 +335,10 @@ public class LexicalAnalyzer {
     }
     public static void main(String[] args)  {
         LexicalAnalyzer analyzer = new LexicalAnalyzer();
-        String directory = "D:\\Semester 6\\Design of Compilers\\Project\\TestCases\\Test1.c";
+        String directory = "D:\\Semester 6\\Design of Compilers\\Project\\TestCases\\Test6.c";
         analyzer.tokenize(directory);
         analyzer.typeOf();
-        //analyzer.printTokens();
+//        analyzer.printTokens();
         analyzer.SymbolTableMaker(directory);
         analyzer.printSymbolTable();
     }

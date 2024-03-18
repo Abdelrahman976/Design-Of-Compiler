@@ -187,8 +187,13 @@ public class LexicalAnalyzer {
                         tokens.add(new Token(lexemes.get(i), "Long Long"));
                     else if (lexemes.get(i+1).matches(LongPattern))
                         tokens.add(new Token(lexemes.get(i), "Long"));
-                } else
-                    tokens.add(new Token(lexemes.get(i), "Operator"));
+                } else{
+                    if(lexemes.get(i).matches("(==|!=|<=|>=|<|>)")){
+                        tokens.add(new Token(lexemes.get(i), "RelOp"));
+                    }
+                    else
+                        tokens.add(new Token(lexemes.get(i), "Operator"));
+                }
             } else if (lexemes.get(i).matches(punctuationPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Punctuation"));
             } else if (lexemes.get(i).matches(LongLongPattern)) {

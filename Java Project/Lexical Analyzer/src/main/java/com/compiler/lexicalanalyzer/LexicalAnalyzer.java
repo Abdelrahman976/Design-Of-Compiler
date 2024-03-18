@@ -81,10 +81,10 @@ public class LexicalAnalyzer {
             temp1.clear();
             //printTokens(temp2);
             Pattern Filter3 = Pattern.compile(
-                    "\'(?:[^\\\\']|\\\\.)\'|[0-9][bB][0-9]+|[0-9][xX][0-9a-zA-z]+|0[0-9]+"
-                    +"[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
+                    "[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|\'(?:[^\\\\']|\\\\.)\'|[0-9][bB][0-9]+|[0-9][xX][0-9a-zA-z]+|0[0-9]+"
+                    +"[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
                     +"|\\+\\+|\\+|--|-|\\*|"
-                    +"#|<[^>]*>"
+                    +"#|<[^>]*>|\b('.*|.*'|\".*|.*\")\b"
             );
 
             FilteringHelper(Filter3,temp2);
@@ -312,7 +312,7 @@ public class LexicalAnalyzer {
     private String processLine(String line) {
         String[] inlineParts = line.split("//", -1);
         String noComments = inlineParts[0]; // Return only the part before the inline comment
-        String[] stringLiteralParts = noComments.split("\".*?\\\".*?\\\".*?\"|\".*?\"|'.*?'", -1);
+        String[] stringLiteralParts = noComments.split("\".*?\\\".*?\"|\".*?\\\".*?\\\".*?\"|\".*?\"|'.*?'", -1);
         StringBuilder noStringLiterals = new StringBuilder();
         for (String part : stringLiteralParts) {
             noStringLiterals.append(part);

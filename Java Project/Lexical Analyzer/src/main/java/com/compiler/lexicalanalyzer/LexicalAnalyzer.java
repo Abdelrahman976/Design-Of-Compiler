@@ -312,7 +312,7 @@ public class LexicalAnalyzer {
     private String processLine(String line) {
         String[] inlineParts = line.split("//", -1);
         String noComments = inlineParts[0]; // Return only the part before the inline comment
-        String[] stringLiteralParts = noComments.split("\".*?\"", -1);
+        String[] stringLiteralParts = noComments.split("\".*?\"|'.*?'", -1);
         StringBuilder noStringLiterals = new StringBuilder();
         for (String part : stringLiteralParts) {
             noStringLiterals.append(part);

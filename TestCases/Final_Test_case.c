@@ -1,9 +1,9 @@
-#ifdef 
-#elifdef  
+#ifdef
+#elifdef
 #else
 #include "stdio.h"
 #include <stdbool.h>
-#include"ddsdsds"  
+#include"ddsdsds"
 /* Preprocessor directives with macros */
 #define PI 3.14159
 #define MAX_VALUE 100
@@ -86,9 +86,9 @@ char* get_name(void) {
 }
 
 void compare(int a, int b, int c, int d) {
-    //logical & relational operators 
+    //logical & relational operators
     if (c > d && a >= d) {
-        
+
     }
     if ((a < b && b <= c) || (a == b && !b == c)) {
        printf("lexical analyzer gamed gedan");
@@ -102,13 +102,13 @@ int check_token(const char* str, enum TokenType expected_type) {
   switch (expected_type) {
     case KEYWORD:
     //write your implementation here
-      return 1; 
+      return 1;
     case IDENTIFIER:
-      return 1; 
+      return 1;
     case INTEGER:
-      return 1; 
+      return 1;
     case OPERATOR:
-      return 1; 
+      return 1;
     case SEMICOLON:
       return strcmp(str, ";") == 0;
     case EOF_TOKEN:
@@ -120,27 +120,23 @@ int check_token(const char* str, enum TokenType expected_type) {
 
 
 int main() {
-    enum {RED, GREEN, BLUE} color; 
+    enum {RED, GREEN, BLUE} color;
     // Declare variables
     int integerVariable = 42.3, z, h;
     int exp11 = 3451e3;
     int 0ull=5;
     int iffy;
-    int x= "happy;
     int 1x;
     int 1x=1+-+-+1;
     int integerTricky = +-+-+143;
-    int integerTricky2 = +-+-+-  763;
-    int integerTricky3 = -+-+-8964;
-    int integerTricky4 = -+-+-+ 9316;
-    +-+-+-+-+-1;
+    int integerTricky2 = 1 -+-+-8964;
     char tt = 'r';
     char 24611OmarVar1646461 = 'x';
     str s = "oma";
     short item_quantity_456 = 32767;
     float fVar = 3.14;
     float x=-1.39434e-10 ,y=1.1+1.2 ;-
-    
+
     // Tricky Data Type testcases
     long y = 1511164.161664L;
     long long x = 3.16161111LL;
@@ -151,7 +147,7 @@ int main() {
     _Bool is_active_404 = true;
     double sum;
     sum = integerVariable + floatVariable
-    
+
     i+1;
     z-h;
     s += tt;
@@ -162,9 +158,9 @@ int main() {
     null->;
     int for = 1;
     double if = 3.14;
-    
+
     //array of pointers
-    
+
     const char* test_cases[] = {
     "int x = 10;",
     "if (x > 5) {",
@@ -176,11 +172,10 @@ int main() {
     "void main() {}",
     "float pi = 3.14;",
     "for (int i = 0; i < 10; i++) {",
-    "  // Some code",
     "}",
     // Add more test cases here
    };
-    
+
     // Binary, Hexadecimal and octal values
     int hexValue1 = +0xABE12;
     int hexValue2 = 0xe464;
@@ -192,9 +187,9 @@ int main() {
     int invalid_binary_1 = 0b12; // Invalid, interpreted as octal, not binary
     int invalid_binary_2 = 1b023; // Pretending to be binary but is just decimal 10
     int floatValue = 46613e4;
-   
-    
-    
+
+
+
     // Pointers and dereferencing
     void *pointer = NULL;
     int *ptr;
@@ -210,37 +205,36 @@ int main() {
     printf("AND: %d\n", a & b);
     printf("XOR: %d\n", a ^ b);
     printf("p << 1 = %d\n", a << 1);
-    
+
     // conditional operator
     printf("%s\n", and_result ? "true" : "false");
     printf("%s\n", or_result ? "true" : "false");
-    
+
     //sizeof operator
     printf("Size of int: %zu bytes\n", sizeof(int));
 
     // function calls
     int x = 10, y = 20, w = 11, z = 18;
-    compare(x, y, w , z); 
+    compare(x, y, w , z);
     int base = 2;
     int exponent = 5;
     long long int result_power = power(base, exponent);
     void print_message(char* message);
     char* get_name(void);
-    
+
     // Declare and initialize a struct Address variable
     struct Address myAddress = {
         .street = "123 Main Street",
         .city = "Cityville"
     };
     myAddress.zipcode= 1234
-    
+
   // more tricky code
     int fortytwo = 0x2A, int0 = 0b0, int1 = 0b1, int2 = 02;
     do { int0 += int1++ + int2; } while (--fortytwo > 1);
     double doublewoh = (double) int0/*hi there*// (int1 += int2);
-    int hamda123hamada123 = 2;
     printf("printf(\"Hello, world!\\n\")");
-
+    int hello123hello123=2;
     // Test inside double quotes
   printf("The \"value pointed to by\" ptr is: %d\n", *ptr);
   // Test bad code

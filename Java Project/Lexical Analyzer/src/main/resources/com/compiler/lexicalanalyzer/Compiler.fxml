@@ -25,7 +25,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <JFXButton graphicTextGap="10.0" layoutX="401.0" layoutY="5.0" minWidth="130.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: #3949ab; -fx-border-radius: 5; -fx-background-color: #3949ab; -fx-border-width: 2;" text="Choose File" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="10.0">
+                        <JFXButton graphicTextGap="10.0" layoutX="401.0" layoutY="5.0" minWidth="130.0" onMouseClicked="#readCode" prefHeight="37.0" prefWidth="148.0" style="-fx-border-color: #3949ab; -fx-border-radius: 5; -fx-background-color: #3949ab; -fx-border-width: 2;" text="Open File" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="10.0">
                            <graphic>
                               <FontAwesomeIcon fill="WHITE" glyphName="FILE_CODE_ALT" size="1.3em" text="" textAlignment="CENTER" wrappingWidth="14.142857551574707" />
                            </graphic>
@@ -54,7 +54,7 @@
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label prefHeight="27.0" prefWidth="218.0" text="Please Select a C File to Compile " textAlignment="CENTER" textFill="#000000b4" wrapText="true">
+                              <Label prefHeight="27.0" prefWidth="218.0" text="Please Open a C File to Compile " textAlignment="CENTER" textFill="#000000b4" wrapText="true">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -98,7 +98,7 @@
             </VBox>
                   <AnchorPane fx:id="viewWindow" maxHeight="1.7976931348623157E308" maxWidth="400.0" minWidth="400.0" prefWidth="400.0" stylesheets="@Style.css">
                <children>
-                  <ScrollPane prefHeight="598.0" prefWidth="400.0" style="-fx-faint-focus-color: transparent; -fx-focus-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="598.0" prefWidth="400.0" style="-fx-faint-focus-color: transparent; -fx-focus-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <content>
                         <VBox fx:id="vboxView" alignment="CENTER" prefHeight="583.0" prefWidth="384.0" spacing="20.0">
                            <padding>

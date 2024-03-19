@@ -81,7 +81,7 @@ public class CompilerController implements Initializable {
             e.printStackTrace();
         }
     }
-    String [] tokenType = {"Keyword", "Identifier", "Operator", "Integer", "Float", "Long", "Long Long", "String Literal", "Char Literal", "Punctuation"};
+    String [] tokenType = {"Keyword", "Identifier", "Operator", "Integer", "Float", "Long", "Long Long", "String Literal", "Char Literal", "Punctuation","Error"};
     TableView<LexicalAnalyzer.Token> tokensTable;
     @FXML
     void scanCode(MouseEvent event) {
@@ -102,7 +102,6 @@ public class CompilerController implements Initializable {
             }
         }
     }
-
     private TableView<LexicalAnalyzer.Token> createTable(String type){
         TableView<LexicalAnalyzer.Token> tokensTable = new TableView<>();
         tokensTable.setMinHeight(300);
@@ -112,15 +111,27 @@ public class CompilerController implements Initializable {
         lexemeCol.setCellValueFactory(new PropertyValueFactory<>("Lexeme"));
         colFactory(lexemeCol);
         tokensTable.getItems().clear();
-        for (LexicalAnalyzer.Token token : lexicalAnalyzer.getTokens())
-            if(token.Tokentype.equals(type))
+        for (LexicalAnalyzer.Token token : lexicalAnalyzer.getTokens()){
+            if(token.Tokentype.equals(type)){
                 tokensTable.getItems().add(token);
-        setColFactory(lexemeCol);
+            }
+        }
+        // Check if the content of the cells in the column exceeds the width of the column
+        lexemeCol.widthProperty().addListener((obs, oldVal, newVal) -> {
+            for (LexicalAnalyzer.Token item : tokensTable.getItems()) {
+                if (lexemeCol.getCellData(item) != null && lexemeCol.getCellData(item).length() > newVal.doubleValue()) {
+                    lexemeCol.setMinWidth(Control.USE_PREF_SIZE);
+                    return;
+                }
+            }
+            lexemeCol.setMinWidth(349);
+        });
         if (!tokensTable.getItems().isEmpty()) {
             tokensTable.getColumns().add(lexemeCol);
             return tokensTable;
-        } else
+        } else {
             return null;
+        }
     }
     TableView<LexicalAnalyzer.SymbolTable> symbolTable;
     @FXML
@@ -235,8 +246,8 @@ public class CompilerController implements Initializable {
                                 param.setMinWidth(headerWidth * 1.7);
                                 param.setMaxWidth(headerWidth * 1.7);
                             } else {
-                                param.setMinWidth(maxWidth * 1.7); // Add some padding
-                                param.setMaxWidth(maxWidth * 1.7); // Add some padding
+                                param.setMinWidth(maxWidth * 1.5); // Add some padding
+                                param.setMaxWidth(maxWidth * 1.5); // Add some padding
                             }
                         }
                     }
@@ -245,48 +256,7 @@ public class CompilerController implements Initializable {
         };
         col.setCellFactory(cellFactory);
     }
-    private void setColFactory(TableColumn<LexicalAnalyzer.Token,String> col){
-        Callback<TableColumn<LexicalAnalyzer.Token, String>, TableCell<LexicalAnalyzer.Token, String>> cellFactory = new Callback<>() {
-            @Override
-            public TableCell<LexicalAnalyzer.Token, String> call(TableColumn<LexicalAnalyzer.Token, String> param) {
-                return new TableCell<>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item == null || empty) {
-                            setText(null);
-                        } else {
-                            setText(item);
-                            // Calculate the width of the cell's content
-                            Text text = new Text();
-                            double maxWidth = 0;
-//                            double width = 0;
-                            for (LexicalAnalyzer.Token tokenType : lexicalAnalyzer.getTokens()) {
-                                text.setText(tokenType.Lexeme);
-                                System.out.println(tokenType.Lexeme+" "+text.getLayoutBounds().getWidth()   );
-                                double width = text.getLayoutBounds().getWidth();
-                                if (width > maxWidth) {
-                                    maxWidth = width;
-                                    System.out.println("|                         "+maxWidth+" "+width+"                                 |");
-                                }
-                            }
-                            for (String type : tokenType) {
-                                double headerWidth = new Text(type).getLayoutBounds().getWidth();
-                                if (maxWidth < headerWidth) {
-                                    param.setMinWidth(headerWidth);
-                                    param.setMaxWidth(headerWidth);
-                                } else {
-                                    param.setMinWidth(maxWidth); // Add some padding
-                                    param.setMaxWidth(maxWidth); // Add some padding
-                                }
-                            }
-                        }
-                    }
-                };
-            }
-        };
-        col.setCellFactory(cellFactory);
-    }
+
     private void colFactory(TableColumn<?,?> col){
         col.setResizable(false);
         col.setEditable(false);

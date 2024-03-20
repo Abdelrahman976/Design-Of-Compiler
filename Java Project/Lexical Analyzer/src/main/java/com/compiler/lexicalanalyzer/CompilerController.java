@@ -104,22 +104,23 @@ public class CompilerController implements Initializable {
     }
     private TableView<LexicalAnalyzer.Token> createTable(String type){
         TableView<LexicalAnalyzer.Token> tokensTable = new TableView<>();
-        tokensTable.setMinHeight(300);
+        Stage stage = (Stage) vboxView.getScene().getWindow();
+        tokensTable.minHeightProperty().bind(stage.heightProperty().divide(2));
         tokensTable.getStyleClass().add("table-view");
         tokensTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         TableColumn<LexicalAnalyzer.Token, String> lexemeCol = new TableColumn<>(type);
         lexemeCol.setCellValueFactory(new PropertyValueFactory<>("Lexeme"));
-        colFactory(lexemeCol);
+        colFactory(lexemeCol,true);
         tokensTable.getItems().clear();
         for (LexicalAnalyzer.Token token : lexicalAnalyzer.getTokens()){
             if(token.Tokentype.equals(type)){
                 tokensTable.getItems().add(token);
             }
-            if(token.Tokentype.equals("Operator")){
-                for (LexicalAnalyzer.Token token1 : lexicalAnalyzer.getTokens()){
-                    if(token1.Tokentype.equals("RelOp") ){
-                        tokensTable.getItems().add(token1);
-                    }
+        }
+        if(type.equals("Operator")){
+            for (LexicalAnalyzer.Token token1 : lexicalAnalyzer.getTokens()){
+                if(token1.Tokentype.equals("RelOp")){
+                    tokensTable.getItems().add(token1);
                 }
             }
         }
@@ -187,18 +188,18 @@ public class CompilerController implements Initializable {
         symbolTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         TableColumn<LexicalAnalyzer.SymbolTable, String> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
-        colFactory(idCol);
+        colFactory(idCol,false);
         TableColumn<LexicalAnalyzer.SymbolTable, String> nameCol = new TableColumn<>("Name");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colFactory(nameCol);
+        colFactory(nameCol,false);
         TableColumn<LexicalAnalyzer.SymbolTable, String> typeCol = new TableColumn<>("Type");
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-        colFactory(typeCol);
+        colFactory(typeCol,false);
         TableColumn<LexicalAnalyzer.SymbolTable, String> lineOfDecCol = new TableColumn<>("Line of Declaration");
         lineOfDecCol.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().line_of_references.getFirst().toString())
         );// To display the line of declaration in the table
-        colFactory(lineOfDecCol);
+        colFactory(lineOfDecCol,false);
         TableColumn<LexicalAnalyzer.SymbolTable, String> lineOfRefCol = new TableColumn<>("Line of Reference");
         lineOfRefCol.setCellValueFactory(cellData -> {
             ArrayList<Integer> lineOfReferences = cellData.getValue().line_of_references;
@@ -209,7 +210,7 @@ public class CompilerController implements Initializable {
                 return new SimpleObjectProperty<>("No Reference");
             }
         });// To display the lines of references in the table
-        colFactory(lineOfRefCol);
+        colFactory(lineOfRefCol,false);
         symbolTable.getItems().clear();
         // Set the cell factory for each column
         setColFactory(idCol,"ID");
@@ -288,8 +289,8 @@ public class CompilerController implements Initializable {
         col.setCellFactory(cellFactory);
     }
 
-    private void colFactory(TableColumn<?,?> col){
-        col.setResizable(false);
+    private void colFactory(TableColumn<?,?> col,boolean isResizable){
+        col.setResizable(isResizable);
         col.setEditable(false);
         col.setReorderable(false);
         col.setSortable(false);

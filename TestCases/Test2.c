@@ -7,7 +7,7 @@ typedef struct {
     int x;
     int y;
 } Point1;
-//---x-----------------------------
+//---------------------------------
 
 // Test Case Pass
 struct {

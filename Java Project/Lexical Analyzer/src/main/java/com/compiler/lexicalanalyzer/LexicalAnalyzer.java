@@ -327,7 +327,7 @@ public class LexicalAnalyzer {
                     Pattern pattern = Pattern.compile("(?<!%)\\b" + symbol.name + "\\b");
                     Matcher matcher = pattern.matcher(line);
                     if (matcher.find()) {
-                        symbol.line_of_refrences.add(lineNumber);
+                        symbol.line_of_references.add(lineNumber);
                     }
                 }
             }
@@ -358,7 +358,7 @@ public class LexicalAnalyzer {
             // Check if the symbol has any lines of references before attempting to print
             if(!symbol.line_of_references.isEmpty()) {
                 // Print the first part of the row including the ID, name, type, size, and the first line of declaration
-                System.out.printf(rowFormat, symbol.ID, symbol.name, symbol.type, symbol.line_of_refrences.getFirst());
+                System.out.printf(rowFormat, symbol.ID, symbol.name, symbol.type, symbol.line_of_references.getFirst());
             }
             for (int line = 1; line<symbol.line_of_references.size(); line++)
                 System.out.print(symbol.line_of_references.get(line) + " ");

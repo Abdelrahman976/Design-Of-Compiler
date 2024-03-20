@@ -115,6 +115,13 @@ public class CompilerController implements Initializable {
             if(token.Tokentype.equals(type)){
                 tokensTable.getItems().add(token);
             }
+            if(token.Tokentype.equals("Operator")){
+                for (LexicalAnalyzer.Token token1 : lexicalAnalyzer.getTokens()){
+                    if(token1.Tokentype.equals("RelOp") ){
+                        tokensTable.getItems().add(token1);
+                    }
+                }
+            }
         }
         // Check if the content of the cells in the column exceeds the width of the column
         lexemeCol.widthProperty().addListener((obs, oldVal, newVal) -> {

@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Scanner;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CompilerController implements Initializable {
 
@@ -43,7 +44,6 @@ public class CompilerController implements Initializable {
     private AnchorPane viewWindow;
     @FXML
     private VBox infoBox;
-
 
     @FXML
     void readCode(MouseEvent event) {
@@ -141,6 +141,8 @@ public class CompilerController implements Initializable {
         }
     }
     TableView<LexicalAnalyzer.SymbolTable> symbolTable;
+    String selectedSymbol = null;
+    int lastIndex = 0;
     @FXML
     void symbolTable(MouseEvent event) {
         if (file == null)
@@ -154,6 +156,28 @@ public class CompilerController implements Initializable {
             symbolTable = createSymbolTable();
             vboxView.getChildren().clear();
             vboxView.getChildren().add(symbolTable);
+            symbolTable.setOnMouseClicked(e-> {
+                LexicalAnalyzer.SymbolTable selectedItem = symbolTable.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    String newSelection = selectedItem.getName();
+                    if (selectedSymbol == null || !selectedSymbol.equals(newSelection)) {
+                        // If the selected symbol has changed, start searching from the beginning
+                        selectedSymbol = newSelection;
+                        lastIndex = 0;
+                    }
+                    // Find the next occurrence of the selected symbol
+                    Pattern pattern = Pattern.compile("\\b" + selectedSymbol + "\\b");
+                    Matcher matcher = pattern.matcher(codeArea.getText().substring(lastIndex));
+                    if (matcher.find()) {
+                        // If the selected symbol is found, highlight it and update lastIndex
+                        int index = lastIndex + matcher.start();
+                        codeArea.selectRange(index, index + selectedSymbol.length());
+                        lastIndex = index + selectedSymbol.length();
+                    } else {
+                        lastIndex = 0;
+                    }
+                }
+            });
         }
     }
     private TableView<LexicalAnalyzer.SymbolTable> createSymbolTable(){
@@ -271,10 +295,7 @@ public class CompilerController implements Initializable {
         col.setSortable(false);
     }
     @FXML
-    void parseCode(MouseEvent event) {
-
-    }
-
+    void parseCode(MouseEvent event) {}
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         fileChooser.setInitialDirectory(new File("../../TestCases"));

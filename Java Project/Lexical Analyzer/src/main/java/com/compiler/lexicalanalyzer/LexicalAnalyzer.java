@@ -67,7 +67,7 @@ public class LexicalAnalyzer {
         String fileContent = new String(fileBytes); // Use the appropriate character encoding if known
         fileContent = fileContent.replaceAll("//.*|(?s)/\\*.*?\\*/", ""); // remove comments
         fileContent = fileContent.replaceAll("#include\\s*[\"<][^\">]+[\">](\\r?\\n|\\r)", "");// remove libraries
-        fileContent = fileContent.replaceAll("#(ifdef|endif|define|undef|if|else|elif)\\s*.*?(\\r?\\n|\\r)", "");
+
         return new BufferedReader(new StringReader(fileContent));
     }
 
@@ -94,10 +94,10 @@ public class LexicalAnalyzer {
             temp1.clear();
             //printTokens(temp2);
             Pattern Filter3 = Pattern.compile(
-                    "[0-9][bB][0-9]+|[0-9][xX][0-9a-zA-z]+|0[0-9]+"
-                            +"[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
-                            +"|\\+\\+|\\+|--|-|\\*|"
-                            +"#|<[^>]*>"
+                    "[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|\'(?:[^\\\\']|\\\\.)\'|('([^'\\n]*)|([^'\\n]*)')|[-+]?[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[-+]?[0-9][bB][0-9]+|[-+]?[0-9][xX][0-9a-zA-z]+|[-+]?0[0-9]+"
+                    +"[-+]?0[xX][0-9a-fA-F]+|[-+]?0[0-7]+|[-+]?0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(\\s*)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
+                    +"|\\+\\+|\\+|--|-|\\*|"
+                    +"#|<[^>]*>"
             );
 
             FilteringHelper(Filter3,temp2);
@@ -145,14 +145,13 @@ public class LexicalAnalyzer {
         String stringsPattern = "\".*\""; // Matches string literals
         String charsPattern = "'.?'"; // Matches char literals
         String operatorsPattern = "~|:|#|\\*|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-/%&|.!^=<>]+"; // Simple example for common operators
-        String punctuationPattern = "([()\\[\\]{},;?\"])"; // Common punctuation marks
-        String LongPattern= "[1-9][0-9]*\\.?[0-9]*(L|UL|l|ul)"; // Matches long numbers
-        String LongLongPattern= "[1-9][0-9]*\\.?[0-9]*(ULL|LL|ull|ll)"; // Matches long numbers
-        String integersPattern = "(0|[-+]?[1-9][0-9]*)|0[xX][0-9a-fA-F]+|0[0-7]+|0[bB][01]+|((\\+-)*\\+?|(-\\+)*-?)(0|[1-9][0-9]*)"; // Matches integer numbers
+        String punctuationPattern = "([()\\[\\]{},;?'\"])"; // Common punctuation marks
+        String LongPattern= "[1-9][0-9]*(L|UL|l|ul)"; // Matches long numbers
+        String LongLongPattern= "[1-9][0-9]*(ULL|LL|ull|ll)"; // Matches long numbers
+        String integersPattern = "(0|[-+]?[1-9][0-9]*)|[-+]?0[xX][0-9a-fA-F]+|[-+]?0[0-7]+|[-+]?0[bB][01]+|((\\+-)*\\+?|(-\\+)*-?)\\s*(0|[1-9][0-9]*)"; // Matches integer numbers
         String floatsPattern = "[-+]?((0\\.)|[1-9][0-9]*\\.)?[1-9][0-9]*([eE][-+]?\\d+)?([fF])|[1-9][0-9]*f|((-\\+)*-?)((0\\.)|[1-9][0-9]*\\.)?[1-9][0-9]*([eE][-+]?\\d+)?"; // Matches floating-point numbers
         String keywordsPattern = "(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|restrict|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while)";
         String identifier = "[_a-zA-Z][_a-zA-Z0-9]*"; // identifier
-//        String BadStringPattern = "[0-9]+[_a-zA-Z][_a-zA-Z0-9]*"; // Matches badString literals
         boolean StructId = false;
         boolean UnionId = false;
         boolean EnumId = false;
@@ -183,9 +182,23 @@ public class LexicalAnalyzer {
                 signCounter=i+1;
                 i--;
             }
+//            if((lexemes.get(i).matches("[-+]")||lexemes.get(i).matches("((\\+-)+\\+?|(-\\+)+-?)"))&&lexemes.get(i-1).matches("=|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=")){
+//                int counter=1;
+//                sign = true;
+//                String lexeme = lexemes.get(i);
+//                while(lexemes.get(i+counter).matches("[-+]")){
+//                    lexeme +=lexemes.get(i+counter);
+//                    counter++;
+//                }
+//                i=i+counter-1;
+//                lexeme+=lexemes.get(i+1);
+//                lexemes.set(i+1, lexeme);
+//                signCounter=i+12;
+//                continue;
+//            }
             else if (lexemes.get(i).matches(stringsPattern))
                 tokens.add(new Token(lexemes.get(i), "String Literal"));
-            else if (lexemes.get(i).matches(charsPattern)) {
+             else if (lexemes.get(i).matches(charsPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Char Literal"));
             } else if (lexemes.get(i).matches(operatorsPattern)) {
                 if (i>1&&lexemes.get(i).matches("[+|-]")&&lexemes.get(i-1).matches("=")&&(lexemes.get(i+1).matches(integersPattern)||lexemes.get(i+1).matches(floatsPattern))){
@@ -214,20 +227,20 @@ public class LexicalAnalyzer {
             } else if (lexemes.get(i).matches(LongPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Long"));
             } else if (lexemes.get(i).matches(integersPattern)) {
-                if(lexemes.get(i).matches("0[xX][0-9a-fA-F]+"))
-                    tokens.add(new Token(lexemes.get(i), "Hexadecimal"));
-                else if(lexemes.get(i).matches("0[0-7]+"))
-                    tokens.add(new Token(lexemes.get(i), "Octal"));
-                else if(lexemes.get(i).matches("0[bB][01]+"))
-                    tokens.add(new Token(lexemes.get(i), "Binary"));
-                else
-                    tokens.add(new Token(lexemes.get(i), "Integer"));
+                 if(lexemes.get(i).matches("[+|-]?0[xX][0-9a-fA-F]+"))
+                        tokens.add(new Token(lexemes.get(i), "Hexadecimal"));
+                    else if(lexemes.get(i).matches("[+|-]?0[0-7]+"))
+                        tokens.add(new Token(lexemes.get(i), "Octal"));
+                    else if(lexemes.get(i).matches("[+|-]?0[bB][01]+"))
+                        tokens.add(new Token(lexemes.get(i), "Binary"));
+                    else
+                        tokens.add(new Token(lexemes.get(i), "Integer"));
             } else if (lexemes.get(i).matches(floatsPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Float"));
             } else if (lexemes.get(i).matches(keywordsPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Keyword"));//
             }
-            else if (lexemes.get(i).matches(identifier)) {
+             else if (lexemes.get(i).matches(identifier)) {
                 tokens.add(new Token(lexemes.get(i), "Identifier"));
                 if(EnumId && lexemes.get(i-1).matches("enum")||(EnumId && lexemes.get(i-1).matches("}")&& lexemes.get(i+1).matches(";"))) {
                     tokens.getLast().IdType = "Enum";
@@ -262,7 +275,7 @@ public class LexicalAnalyzer {
         }
     }
     public void SymbolTableMaker(String directory){
-        int counter=1;
+        int counter = 1;
         for (Token token : tokens) {
             if (token.Tokentype.equals("Identifier")) {
                 boolean exists = false;
@@ -283,51 +296,56 @@ public class LexicalAnalyzer {
             boolean inBlockComment = false;
             while ((line = infile.readLine()) != null) {
                 lineNumber++;
+                // Skip lines that start with #
+                if (line.trim().startsWith("#"))
+                    continue;
+
                 if (inBlockComment) {
                     if (line.contains("*/")) {
                         inBlockComment = false;
-                        String[] parts = line.split("\\*/", -1);
-                        if (parts.length > 1) {
-                            // Process the part before the end of the block comment
-                            processLine(parts[0]);
-                            // Process the part after the end of the block comment
-                            processLine(parts[1]);
-                        }
-                    }
-                } else {
-                    String[] blockParts = line.split("/\\*", -1);
-                    if (blockParts.length > 1) {
-                        inBlockComment = true;
-                        // Process the part before the start of the block comment
-                        processLine(blockParts[0]);
+                        // Process the line after the end of a block comment, if there's code after it
+                        line = line.substring(line.indexOf("*/") + 2);
+                        // Only continue processing if there's actual code beyond the comment
+                        if(line.trim().isEmpty()) continue;
                     } else {
-                        // Process the whole line if there's no block comment
-                        processLine(line);
+                        // Skip the entire line since it's within block comments
+                        continue;
                     }
-
+                } else if (line.contains("/*")) {
+                    String[] parts = line.split("/\\*", 2);
+                    line = parts[0];
+                    if (parts[1].contains("*/")) {
+                        line += parts[1].substring(parts[1].indexOf("*/") + 2);
+                    } else {
+                        inBlockComment = true;
+                    }
                 }
+                // Remove inline comments
+                line = processLine(line);
 
                 for (SymbolTable symbol : symbolTableRow) {
-                    // Create a pattern that matches the symbol name as a standalone word
                     Pattern pattern = Pattern.compile("(?<!%)\\b" + symbol.name + "\\b");
                     Matcher matcher = pattern.matcher(line);
-                    // If the symbol name is found as a standalone word, add the line number
                     if (matcher.find()) {
-                        symbol.line_of_references.add(lineNumber);
+                        symbol.line_of_refrences.add(lineNumber);
                     }
                 }
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Error opening input file: " + e.getMessage());
         }
     }
-    private void processLine(String line) {
+    private String processLine(String line) {
         String[] inlineParts = line.split("//", -1);
-        if (inlineParts.length > 0) {
-            line = inlineParts[0]; // Keep only the part before the inline comment
+        String noComments = inlineParts[0]; // Return only the part before the inline comment
+        String[] stringLiteralParts = noComments.split("\".*(\\\")*.*(\\\")*.*\"|\".*?\"|'.*?'", -1);
+        StringBuilder noStringLiterals = new StringBuilder();
+        for (String part : stringLiteralParts) {
+            noStringLiterals.append(part);
         }
+        return noStringLiterals.toString();
     }
+
     public void printSymbolTable() {
         // Header
         String headerFormat = "%-8s %-25s %-15s %-25s %-20s\n";
@@ -340,7 +358,7 @@ public class LexicalAnalyzer {
             // Check if the symbol has any lines of references before attempting to print
             if(!symbol.line_of_references.isEmpty()) {
                 // Print the first part of the row including the ID, name, type, size, and the first line of declaration
-                System.out.printf(rowFormat, symbol.ID, symbol.name, symbol.type, symbol.line_of_references.getFirst());
+                System.out.printf(rowFormat, symbol.ID, symbol.name, symbol.type, symbol.line_of_refrences.getFirst());
             }
             for (int line = 1; line<symbol.line_of_references.size(); line++)
                 System.out.print(symbol.line_of_references.get(line) + " ");
@@ -368,7 +386,7 @@ public class LexicalAnalyzer {
         analyzer.tokenize(directory);
         analyzer.typeOf();
         analyzer.printTokens();
-//        analyzer.SymbolTableMaker(directory);
-//        analyzer.printSymbolTable();
+        //analyzer.SymbolTableMaker(directory);
+        //analyzer.printSymbolTable();
     }
 }

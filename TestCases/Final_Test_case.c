@@ -201,14 +201,14 @@ int main() {
     int a = 12, b = 25;
     int *c;
     x = a * b;
-    a+++b;
+    x= a+++b;
     printf("AND: %d\n", a & b);
     printf("XOR: %d\n", a ^ b);
     printf("p << 1 = %d\n", a << 1);
 
     // conditional operator
-    printf("%s\n", and_result ? "true" : "false");
-    printf("%s\n", or_result ? "true" : "false");
+    printf("%s\n" , and_result ? "true" : "false");
+    printf("%s\n" , or_result ? "true" : "false");
 
     //sizeof operator
     printf("Size of int: %zu bytes\n", sizeof(int));

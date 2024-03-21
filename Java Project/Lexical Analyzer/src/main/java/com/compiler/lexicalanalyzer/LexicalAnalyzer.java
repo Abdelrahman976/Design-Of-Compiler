@@ -36,7 +36,6 @@ public class LexicalAnalyzer {
         String name;
         String type;
         String ID;
-
         ArrayList<Integer> line_of_references = new ArrayList<>();
         SymbolTable(String name, String type,String ID) {
             this.name = name;
@@ -67,7 +66,7 @@ public class LexicalAnalyzer {
         String fileContent = new String(fileBytes); // Use the appropriate character encoding if known
         fileContent = fileContent.replaceAll("//.*|(?s)/\\*.*?\\*/", ""); // remove comments
         fileContent = fileContent.replaceAll("#include\\s*[\"<][^\">]+[\">](\\r?\\n|\\r)", "");// remove libraries
-
+        fileContent = fileContent.replaceAll("#(ifdef|endif|define|undef|if|else|elif)\\s*.*?(\\r?\\n|\\r)", "");
         return new BufferedReader(new StringReader(fileContent));
     }
 
@@ -95,9 +94,9 @@ public class LexicalAnalyzer {
             //printTokens(temp2);
             Pattern Filter3 = Pattern.compile(
                     "[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|\'(?:[^\\\\']|\\\\.)\'|('([^'\\n]*)|([^'\\n]*)')|[-+]?[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[-+]?[0-9][bB][0-9]+|[-+]?[0-9][xX][0-9a-zA-z]+|[-+]?0[0-9]+"
-                    +"[-+]?0[xX][0-9a-fA-F]+|[-+]?0[0-7]+|[-+]?0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(\\s*)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
-                    +"|\\+\\+|\\+|--|-|\\*|"
-                    +"#|<[^>]*>"
+                            +"[-+]?0[xX][0-9a-fA-F]+|[-+]?0[0-7]+|[-+]?0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(\\s*)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
+                            +"|\\+\\+|\\+|--|-|\\*|"
+                            +"#|<[^>]*>"
             );
 
             FilteringHelper(Filter3,temp2);
@@ -198,7 +197,7 @@ public class LexicalAnalyzer {
 //            }
             else if (lexemes.get(i).matches(stringsPattern))
                 tokens.add(new Token(lexemes.get(i), "String Literal"));
-             else if (lexemes.get(i).matches(charsPattern)) {
+            else if (lexemes.get(i).matches(charsPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Char Literal"));
             } else if (lexemes.get(i).matches(operatorsPattern)) {
                 if (i>1&&lexemes.get(i).matches("[+|-]")&&lexemes.get(i-1).matches("=")&&(lexemes.get(i+1).matches(integersPattern)||lexemes.get(i+1).matches(floatsPattern))){
@@ -227,20 +226,20 @@ public class LexicalAnalyzer {
             } else if (lexemes.get(i).matches(LongPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Long"));
             } else if (lexemes.get(i).matches(integersPattern)) {
-                 if(lexemes.get(i).matches("[+|-]?0[xX][0-9a-fA-F]+"))
-                        tokens.add(new Token(lexemes.get(i), "Hexadecimal"));
-                    else if(lexemes.get(i).matches("[+|-]?0[0-7]+"))
-                        tokens.add(new Token(lexemes.get(i), "Octal"));
-                    else if(lexemes.get(i).matches("[+|-]?0[bB][01]+"))
-                        tokens.add(new Token(lexemes.get(i), "Binary"));
-                    else
-                        tokens.add(new Token(lexemes.get(i), "Integer"));
+                if(lexemes.get(i).matches("[+|-]?0[xX][0-9a-fA-F]+"))
+                    tokens.add(new Token(lexemes.get(i), "Hexadecimal"));
+                else if(lexemes.get(i).matches("[+|-]?0[0-7]+"))
+                    tokens.add(new Token(lexemes.get(i), "Octal"));
+                else if(lexemes.get(i).matches("[+|-]?0[bB][01]+"))
+                    tokens.add(new Token(lexemes.get(i), "Binary"));
+                else
+                    tokens.add(new Token(lexemes.get(i), "Integer"));
             } else if (lexemes.get(i).matches(floatsPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Float"));
             } else if (lexemes.get(i).matches(keywordsPattern)) {
                 tokens.add(new Token(lexemes.get(i), "Keyword"));//
             }
-             else if (lexemes.get(i).matches(identifier)) {
+            else if (lexemes.get(i).matches(identifier)) {
                 tokens.add(new Token(lexemes.get(i), "Identifier"));
                 if(EnumId && lexemes.get(i-1).matches("enum")||(EnumId && lexemes.get(i-1).matches("}")&& lexemes.get(i+1).matches(";"))) {
                     tokens.getLast().IdType = "Enum";
@@ -338,7 +337,7 @@ public class LexicalAnalyzer {
     private String processLine(String line) {
         String[] inlineParts = line.split("//", -1);
         String noComments = inlineParts[0]; // Return only the part before the inline comment
-        String[] stringLiteralParts = noComments.split("\".*(\\\")*.*(\\\")*.*\"|\".*?\"|'.*?'", -1);
+        String[] stringLiteralParts = noComments.split("\".*(\\\")*.*(\\\")*.*\"\\s(,)|\".*(\\\")*.*(\\\")*.*\"|\".*?\"|'.*?'", -1);
         StringBuilder noStringLiterals = new StringBuilder();
         for (String part : stringLiteralParts) {
             noStringLiterals.append(part);
@@ -360,7 +359,7 @@ public class LexicalAnalyzer {
                 // Print the first part of the row including the ID, name, type, size, and the first line of declaration
                 System.out.printf(rowFormat, symbol.ID, symbol.name, symbol.type, symbol.line_of_references.getFirst());
             }
-            for (int line = 1; line<symbol.line_of_references.size(); line++)
+            for (int line=1;line<symbol.line_of_references.size(); line++)
                 System.out.print(symbol.line_of_references.get(line) + " ");
 
             // After printing all lines of references for the current symbol, move to the next line
@@ -377,16 +376,15 @@ public class LexicalAnalyzer {
         analyzer.tokenize(directory);
         analyzer.typeOf();
         analyzer.SymbolTableMaker(directory);
-//        analyzer.printTokens();
         return analyzer;
     }
     public static void main(String[] args)  {
         LexicalAnalyzer analyzer = new LexicalAnalyzer();
-        String directory = "../../TestCases/Test1.c";
+        String directory = "../../TestCases/Final_Test_case.c";
         analyzer.tokenize(directory);
         analyzer.typeOf();
-        analyzer.printTokens();
-        //analyzer.SymbolTableMaker(directory);
-        //analyzer.printSymbolTable();
+//        analyzer.printTokens();
+        analyzer.SymbolTableMaker(directory);
+        analyzer.printSymbolTable();
     }
 }

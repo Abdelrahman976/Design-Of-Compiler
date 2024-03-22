@@ -94,7 +94,7 @@ public class LexicalAnalyzer {
             //printTokens(temp2);
             Pattern Filter3 = Pattern.compile(
                     "[0-9]+\\.?[0-9]*([eE][-+]?\\d+)?(f|F|ULL|ull|LL|ll|UL|ul|L|l|u|U)|\'(?:[^\\\\']|\\\\.)\'|('([^'\\n]*)|([^'\\n]*)')|[-+]?[0-9]+[_a-zA-Z][_a-zA-Z0-9]*|[-+]?[0-9][bB][0-9]+|[-+]?[0-9][xX][0-9a-zA-z]+|[-+]?0[0-9]+"
-                            +"[-+]?0[xX][0-9a-fA-F]+|[-+]?0[0-7]+|[-+]?0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(\\s*)(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
+                            +"[-+]?0[xX][0-9a-fA-F]+|[-+]?0[0-7]+|[-+]?0[bB][01]+|[_a-zA-Z][_a-zA-Z0-9]*|>>=?|<<=?|==?|\\+=|-=|!=|->|<=|>=|\\*=|/=|%=|&=|\\|=|\\^=|&&|\\|\\||[/%&|.!^<>]|([0-9]*[.])?[0-9]+([eE][-+]?\\d+)?|[0-9]+f|((\\+-)+\\+?|(-\\+)+-?)(\\s*)(0?|[1-9][0-9]*)(\\.[0-9]+)?([eE][-+]?\\d+)?"
                             +"|\\+\\+|\\+|--|-|\\*|"
                             +"#|<[^>]*>"
             );
@@ -148,7 +148,7 @@ public class LexicalAnalyzer {
         String LongPattern= "[1-9][0-9]*(L|UL|l|ul)"; // Matches long numbers
         String LongLongPattern= "[1-9][0-9]*(ULL|LL|ull|ll)"; // Matches long numbers
         String integersPattern = "(0|[-+]?[1-9][0-9]*)|[-+]?0[xX][0-9a-fA-F]+|[-+]?0[0-7]+|[-+]?0[bB][01]+|((\\+-)*\\+?|(-\\+)*-?)\\s*(0|[1-9][0-9]*)"; // Matches integer numbers
-        String floatsPattern = "[-+]?((0\\.)|[1-9][0-9]*\\.)?[1-9][0-9]*([eE][-+]?\\d+)?([fF])|[1-9][0-9]*f|((-\\+)*-?)((0\\.)|[1-9][0-9]*\\.)?[1-9][0-9]*([eE][-+]?\\d+)?"; // Matches floating-point numbers
+        String floatsPattern = "[-+]?((0\\.)|[1-9][0-9]*\\.)?[1-9][0-9]*([eE][-+]?\\d+)?([fF])|[1-9][0-9]*f|((\\+-)*\\+?|(-\\+)*-?)((0?\\.)|[1-9][0-9]*\\.)?[1-9][0-9]*([eE][-+]?\\d+)?"; // Matches floating-point numbers
         String keywordsPattern = "(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|restrict|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while)";
         String identifier = "[_a-zA-Z][_a-zA-Z0-9]*"; // identifier
         boolean StructId = false;
@@ -181,20 +181,6 @@ public class LexicalAnalyzer {
                 signCounter=i+1;
                 i--;
             }
-//            if((lexemes.get(i).matches("[-+]")||lexemes.get(i).matches("((\\+-)+\\+?|(-\\+)+-?)"))&&lexemes.get(i-1).matches("=|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=")){
-//                int counter=1;
-//                sign = true;
-//                String lexeme = lexemes.get(i);
-//                while(lexemes.get(i+counter).matches("[-+]")){
-//                    lexeme +=lexemes.get(i+counter);
-//                    counter++;
-//                }
-//                i=i+counter-1;
-//                lexeme+=lexemes.get(i+1);
-//                lexemes.set(i+1, lexeme);
-//                signCounter=i+12;
-//                continue;
-//            }
             else if (lexemes.get(i).matches(stringsPattern))
                 tokens.add(new Token(lexemes.get(i), "String Literal"));
             else if (lexemes.get(i).matches(charsPattern)) {

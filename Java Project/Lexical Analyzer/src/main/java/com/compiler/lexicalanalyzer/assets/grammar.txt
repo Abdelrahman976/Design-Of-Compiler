@@ -1,0 +1,76 @@
+############################## Notice ##############################
+# Put each rule on a single line.
+# Use "→" or "->" to separate rule sides.
+# Use "|" to separate productions.
+# Use "epsilon" to indicate empty string.
+# First symbol will be start symbol.
+# Comments like this are ignored.
+####################################################################
+
+############################## Example #############################
+program → declaration_list
+declaration_list → declaration declaration_list'
+declaration_list' → declaration declaration_list' | epsilon
+declaration → var_declaration | fun_declaration
+
+var_declaration → type_specifier Identifier ; | type_specifier Identifier [ NUM ] ;
+
+type_specifier → int | void | float | char | double
+
+fun_declaration → type_specifier Identifier ( params ) compound_stmt
+
+params → param_list | void
+
+param_list → param param_list'
+param_list' → , param param_list' | epsilon
+
+param → type_specifier Identifier | type_specifier Identifier [ ]
+
+compound_stmt → { local_declarations statement_list }
+
+local_declarations → var_declaration local_declarations'
+local_declarations' → var_declaration local_declarations' | epsilon
+
+statement_list → statement statement_list'
+statement_list' → statement statement_list' | epsilon
+
+statement → expression_stmt | compound_stmt | selection_stmt | iteration_stmt | return_stmt
+
+expression_stmt → expression ; | ;
+
+
+selection_stmt → if ( expression ) expression_stmt selection_stmt'
+selection_stmt' → else expression_stmt | epsilon
+iteration_stmt → while ( expression ) expression_stmt
+return_stmt → return return_stmt'
+return_stmt' → ; | expression ;
+
+expression → var = expression | simple_expression
+
+var → Identifier var'
+var' → epsilon | [ expression ]
+
+simple_expression → additive_expression simple_expression'
+simple_expression' → relop additive_expression | epsilon
+
+relop → <= | < | > | >= | == | !=
+
+additive_expression → term additive_expression'
+additive_expression' → Op term additive_expression' | epsilon
+
+Op → + | - | % | & | | | ^ | << | >>
+
+term → factor term'
+term' → mulop factor term' | epsilon
+
+mulop → * | /
+
+factor → ( expression ) | var | call | NUM
+
+call → Identifier ( args )
+
+args → arg_list | epsilon
+
+arg_list → expression arg_list'
+arg_list' → , expression arg_list' | epsilon
+

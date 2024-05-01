@@ -1,0 +1,12 @@
+Start → Statement Start | epsilon
+Statement → Expression Rest ;
+Rest → = Expression | epsilon
+Expression → Term AS
+AS → AO Term AS | epsilon
+AO → + | -
+Term → Factor MS
+MS → MO Factor MS | epsilon
+MO → * | / | epsilon
+Factor → Integer | ( Expression ) | - Factor | Function
+Function → Identifier Tuple
+Tuple → ( Expression ) | epsilon

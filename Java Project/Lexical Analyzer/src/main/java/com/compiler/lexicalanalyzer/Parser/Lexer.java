@@ -1,4 +1,4 @@
-package com.compiler.lexicalanalyzer;
+package com.compiler.lexicalanalyzer.Parser;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-public class LexicalAnalyzer {
+public class Lexer {
     protected class Token {
         String Lexeme;
         String Tokentype;
@@ -56,7 +56,7 @@ public class LexicalAnalyzer {
         }
     }
 
-    private  List<Token> tokens = new ArrayList<>();
+    private List<Token> tokens = new ArrayList<>();
     private  List<String> lexemes = new ArrayList<>();
     private List<SymbolTable> symbolTableRow = new ArrayList<>();
     BufferedReader RemoveCommentsLibraries(String path) throws IOException {
@@ -140,7 +140,7 @@ public class LexicalAnalyzer {
             }
         }
     }
-    public void typeOf() {
+    public List<Token> typeOf() {
         String stringsPattern = "\".*\""; // Matches string literals
         String charsPattern = "'.?'"; // Matches char literals
         String operatorsPattern = "~|:|#|\\*|>>=?|<<=?|==|!=|->|<=|>=|&&|\\|\\||\\+\\+|--|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<[^>]*>|[+\\-/%&|.!^=<>]+"; // Simple example for common operators
@@ -199,10 +199,13 @@ public class LexicalAnalyzer {
                     else if (lexemes.get(i+1).matches(LongPattern))
                         tokens.add(new Token(lexemes.get(i), "Long"));
                 } else{
-                    if(lexemes.get(i).matches("(==|!=|<=|>=|<|>)")){
-                        tokens.add(new Token(lexemes.get(i), "RelOp"));
-                    }
-                    else
+//                    if(lexemes.get(i).matches("(==|!=|<=|>=|<|>)")){
+//                        tokens.add(new Token(lexemes.get(i), "RelOp"));
+//                    }
+//                    else if(lexemes.get(i).matches("(\\*|/)")){
+//                        tokens.add(new Token(lexemes.get(i), "MulOp"));
+//                    }
+//                    else
                         tokens.add(new Token(lexemes.get(i), "Operator"));
                 }
             } else if (lexemes.get(i).matches(punctuationPattern)) {
@@ -249,6 +252,7 @@ public class LexicalAnalyzer {
                 tokens.add(new Token(lexemes.get(i), "Error"));
             }
         }
+        return tokens;
     }
 
     public void printTokens() {
@@ -358,19 +362,16 @@ public class LexicalAnalyzer {
     public List<SymbolTable> getSymbolTable() {
         return symbolTableRow;
     }
-    public LexicalAnalyzer start(LexicalAnalyzer analyzer,String directory){
+    public Lexer start(Lexer analyzer,String directory){
         analyzer.tokenize(directory);
         analyzer.typeOf();
         analyzer.SymbolTableMaker(directory);
         return analyzer;
     }
-    public static void main(String[] args)  {
-        LexicalAnalyzer analyzer = new LexicalAnalyzer();
-        String directory = "../../TestCases/Final_Test_case.c";
+    public List<Token> initializer(String directory)  {
+        Lexer analyzer = new Lexer();
         analyzer.tokenize(directory);
-        analyzer.typeOf();
-       analyzer.printTokens();
-//        analyzer.SymbolTableMaker(directory);
-//        analyzer.printSymbolTable();
+//        analyzer.typeOf();
+        return analyzer.typeOf();
     }
 }

@@ -1,4 +1,6 @@
 package com.compiler.lexicalanalyzer.Parser;
+import jdk.swing.interop.SwingInterOpUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -30,7 +32,7 @@ public class Grammar {
 
     private void addRule(String line) {
         line = line.strip();
-        var sides = line.contains("→") ? line.split("→") : line.split("->");
+        var sides = line.contains("→") ? line.split("→") : null ;
         var nonTerminal = sides[0].strip();
         var rightSide = sides[1].strip();
         List<Production> productions = new ArrayList<>();
@@ -38,6 +40,7 @@ public class Grammar {
             productions.add(new Production(productionText.strip().split(" ")));
         nonTerminals.add(nonTerminal);
         rules.put(nonTerminal, productions);
+//        System.out.println("Added rule: " + nonTerminal + " -> " + productions);
     }
 
     public List<String> getNonTerminals() {

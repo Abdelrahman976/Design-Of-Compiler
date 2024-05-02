@@ -1,7 +1,7 @@
 ############################## Notice ##############################
 # Put each rule on a single line.
-# Use "→" or "->" to separate rule sides.
-# Use "|" to separate productions.
+# Use "→" to separate rule sides.
+# Use "ㅣ" to separate productions.
 # Use "epsilon" to indicate empty string.
 # First symbol will be start symbol.
 # Comments like this are ignored.
@@ -9,68 +9,110 @@
 
 ############################## Example #############################
 program → declaration_list
-declaration_list → declaration declaration_list'
-declaration_list' → declaration declaration_list' | epsilon
-declaration → var_declaration | fun_declaration
+declaration_list → declaration declaration_list ㅣ epsilon
 
-var_declaration → type_specifier Identifier ; | type_specifier Identifier [ NUM ] ;
+declaration → var_declaration ㅣ fun_declaration
 
-type_specifier → int | void | float | char | double
+
+var_declaration → type_specifier Identifier var_declaration'
+var_declaration' → ; ㅣ [ Integer ] array_value ㅣ = value ;
+array_value → ; ㅣ = { value_list } ;
+value_list → value value_list'
+value_list' → , value value_list' ㅣ epsilon
+value → String Literal ㅣ Char Literal ㅣ Integer ㅣ Float ㅣ Long Long ㅣ Long ㅣ Hexadecimal ㅣ Octal ㅣ Binary
+type_specifier → char ㅣ signed char ㅣ unsigned char ㅣ short ㅣ short int ㅣ signed short int ㅣ unsigned short int ㅣ unsigned short ㅣ unsigned short int ㅣ int ㅣ signed ㅣ signed int ㅣ unsigned ㅣ unsigned int ㅣ long ㅣ long int ㅣ signed long ㅣ signed long int ㅣ unsigned long ㅣ unsigned long int ㅣ long long ㅣ long long int ㅣ signed long long ㅣ signed long long int ㅣ unsigned long long ㅣ unsigned long long int ㅣ float ㅣ double ㅣ long double ㅣ Integer ㅣ void
 
 fun_declaration → type_specifier Identifier ( params ) compound_stmt
 
-params → param_list | void
+params → param_list ㅣ epsilon
 
 param_list → param param_list'
-param_list' → , param param_list' | epsilon
+param_list' → , param param_list' ㅣ epsilon
 
-param → type_specifier Identifier | type_specifier Identifier [ ]
+param → type_specifier Identifier param'
+param' → [ ] ㅣ epsilon
 
-compound_stmt → { local_declarations statement_list }
 
-local_declarations → var_declaration local_declarations'
-local_declarations' → var_declaration local_declarations' | epsilon
 
+statement → expression_stmt ㅣ compound_stmt ㅣ selection_stmt ㅣ iteration_stmt ㅣ jump_stmt
+
+# COMPOUND STATEMENTS
+compound_stmt → { internal_declarations }
+internal_declarations → local_declarations statement_list internal_declarations ㅣ epsilon
+local_declarations → var_declaration local_declarations ㅣ epsilon
 statement_list → statement statement_list'
-statement_list' → statement statement_list' | epsilon
+statement_list' → statement statement_list' ㅣ epsilon
 
-statement → expression_stmt | compound_stmt | selection_stmt | iteration_stmt | return_stmt
-
-expression_stmt → expression ; | ;
+# ------------------------
 
 
-selection_stmt → if ( expression ) expression_stmt selection_stmt'
-selection_stmt' → else expression_stmt | epsilon
-iteration_stmt → while ( expression ) expression_stmt
+# SELECTION STATEMENTS
+selection_stmt → if ( expression ) expression_stmt else_part
+
+expression_stmt → block_stmt ㅣ single_stmt
+
+block_stmt → { statement statement_list' }
+single_stmt → expression ㅣ var_declaration
+
+else_part → else expression_stmt ㅣ epsilon
+
+
+# SELECTION STATEMENTS
+#selection_stmt → if ( expression )  expression_stmt    else_part
+#expression_stmt →  { xxx } ㅣ xxx
+#xxx → expression ; ㅣ ; ㅣ var_declaration
+##expression_stmt' → var_declaration ㅣ expression ㅣ epsilon
+#else_part → else { expression_stmt }ㅣ epsilon
+#why in this grammer it never reaches xxx
+
+# ------------------------
+
+# ITERATIONS STATEMENTS
+iteration_stmt → while ( expression ) compound_stmt ㅣ do compound_stmt while ( expression ) ; ㅣ for forStatement compound_stmt
+forStatement → ( forInitialization ; forCondition ; forIncrement )
+forInitialization → var_declaration ㅣ epsilon
+forCondition → expression ㅣ epsilon
+forIncrement → expression ㅣ epsilon
+# ------------------------
+
+# JUMP STATEMENTS
+jump_stmt → break ; ㅣ continue ; ㅣ return_stmt ㅣ goto_stmt
+
 return_stmt → return return_stmt'
-return_stmt' → ; | expression ;
+return_stmt' → ; ㅣ expression ;
 
-expression → var = expression | simple_expression
+goto_stmt → goto Identifier ;
+# ------------------------
 
-var → Identifier var'
-var' → epsilon | [ expression ]
+# EXPRESSION STATEMENTS
+expression → logical_or_exp
 
-simple_expression → additive_expression simple_expression'
-simple_expression' → relop additive_expression | epsilon
+logical_or_exp → logical_and_exp logical_or_exp'
+logical_or_exp' → || logical_and_exp logical_or_exp' ㅣ epsilon
 
-relop → <= | < | > | >= | == | !=
+logical_and_exp → equality_exp logical_and_exp'
+logical_and_exp' → && equality_exp logical_and_exp' ㅣ epsilon
 
-additive_expression → term additive_expression'
-additive_expression' → Op term additive_expression' | epsilon
+equality_exp → relational_exp equality_exp'
+equality_exp' → == relational_exp equality_exp' ㅣ != relational_exp equality_exp' ㅣ epsilon
 
-Op → + | - | % | & | | | ^ | << | >>
+relational_exp → additive_exp relational_exp'
+relational_exp' → < additive_exp relational_exp' ㅣ <= additive_exp relational_exp' ㅣ > additive_exp relational_exp' ㅣ >= additive_exp relational_exp' ㅣ epsilon
 
+
+additive_exp → term additive_exp'
+additive_exp' → + term additive_exp' ㅣ - term additive_exp' ㅣ epsilon
 term → factor term'
-term' → mulop factor term' | epsilon
+term' → * factor term' ㅣ / factor term' ㅣ epsilon
 
-mulop → * | /
-
-factor → ( expression ) | var | call | NUM
+factor → ( expression ) ㅣ value ㅣ Identifier factor'
+factor' → ++ ㅣ -- ㅣ epsilon
+# ------------------------
 
 call → Identifier ( args )
 
-args → arg_list | epsilon
+args → arg_list ㅣ epsilon
 
 arg_list → expression arg_list'
-arg_list' → , expression arg_list' | epsilon
+arg_list' → , expression arg_list' ㅣ epsilon
 

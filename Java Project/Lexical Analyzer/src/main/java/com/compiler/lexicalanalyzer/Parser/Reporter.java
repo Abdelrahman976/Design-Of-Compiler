@@ -10,11 +10,14 @@ public class Reporter {
     public void printParsingSummary() {
         System.out.println();
         System.out.println("  ┌─────────────────┐");
-        System.out.println("┌─│ Parsing Summary │" + "─".repeat(136) + "┐");
-        System.out.println("│ └─────────────────┘" + " ".repeat(136) + "│");
-        System.out.println("│ " + expressionStatement() + " ".repeat(154 - expressionStatement().length()) + " │");
-        System.out.println("│ " + fileStatement() + " ".repeat(154 - fileStatement().length()) + " │");
-        System.out.println("└" + "─".repeat(156) + "┘");
+        System.out.println("┌─│ Parsing Summary │" + "─".repeat(Math.max(0, 136)) + "┐");
+        System.out.println("│ └─────────────────┘" + " ".repeat(Math.max(0, 136)) + "│");
+        int expSpace = Math.max(0, 154 - expressionStatement().length());
+        System.out.println("│ " + expressionStatement() + " ".repeat(expSpace) + " │");
+        int fileSpace = Math.max(0, 154 - fileStatement().length());
+        System.out.println("│ " + fileStatement() + " ".repeat(fileSpace) + " │");
+        System.out.println("└" + "─".repeat(Math.max(0, 156)) + "┘");
+
     }
 
     public void printAnalysisTable() {

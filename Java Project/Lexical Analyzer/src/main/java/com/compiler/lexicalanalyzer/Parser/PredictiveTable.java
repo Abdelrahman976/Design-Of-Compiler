@@ -43,7 +43,7 @@ public class PredictiveTable {
     }
 
     public Map<String, Map<String, Production>> getTable() {
-        System.out.println(table.get("if"));
+//        System.out.println(table.get("}"));
         return table;
     }
 }

@@ -92,7 +92,7 @@ public class AnalysisTable {
                     return;
                 }
                 var production = predictiveTable.get(front).get(top);
-                System.out.println(top);
+//                System.out.println(front+"aaaaaaaaaaaaaaaaaaaaaa");
                 if (production == null) {
                     row[2] = "Syntax Error";
                     row[3] = "Invalid Syntax";

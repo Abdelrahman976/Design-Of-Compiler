@@ -15,8 +15,9 @@ declaration → var_declaration ㅣ fun_declaration
 
 
 var_declaration → type_specifier Identifier var_declaration'
-var_declaration' → ; ㅣ [ Integer ] array_value ㅣ = value ;
-array_value → ; ㅣ = { value_list } ;
+var_declaration' → ; ㅣ [ square_brackets ] array_value ㅣ = value ;
+square_brackets → Integer ㅣ Identifier
+array_value → ; ㅣ = { value_list } ; ㅣ = value ;
 value_list → value value_list'
 value_list' → , value value_list' ㅣ epsilon
 value → String Literal ㅣ Char Literal ㅣ Integer ㅣ Float ㅣ Long Long ㅣ Long ㅣ Hexadecimal ㅣ Octal ㅣ Binary
@@ -30,9 +31,8 @@ param_list → param param_list'
 param_list' → , param param_list' ㅣ epsilon
 
 param → type_specifier Identifier param'
-param' → [ ] ㅣ epsilon
-
-
+param' → [ ] 2DAㅣ epsilon
+2DA → [ square_brackets ] ㅣ epsilon
 
 statement → expression_stmt ㅣ compound_stmt ㅣ selection_stmt ㅣ iteration_stmt ㅣ jump_stmt
 
@@ -57,20 +57,12 @@ single_stmt → expression ㅣ var_declaration
 else_part → else expression_stmt ㅣ epsilon
 
 
-# SELECTION STATEMENTS
-#selection_stmt → if ( expression )  expression_stmt    else_part
-#expression_stmt →  { xxx } ㅣ xxx
-#xxx → expression ; ㅣ ; ㅣ var_declaration
-##expression_stmt' → var_declaration ㅣ expression ㅣ epsilon
-#else_part → else { expression_stmt }ㅣ epsilon
-#why in this grammer it never reaches xxx
-
 # ------------------------
 
 # ITERATIONS STATEMENTS
-iteration_stmt → while ( expression ) compound_stmt ㅣ do compound_stmt while ( expression ) ; ㅣ for forStatement compound_stmt
+iteration_stmt → while ( expression ) expression_stmt ㅣ do compound_stmt while ( expression ) ; ㅣ for forStatement expression_stmt
 forStatement → ( forInitialization ; forCondition ; forIncrement )
-forInitialization → var_declaration ㅣ epsilon
+forInitialization → type_specifier Identifier = value ㅣ epsilon
 forCondition → expression ㅣ epsilon
 forIncrement → expression ㅣ epsilon
 # ------------------------
@@ -105,14 +97,22 @@ additive_exp' → + term additive_exp' ㅣ - term additive_exp' ㅣ epsilon
 term → factor term'
 term' → * factor term' ㅣ / factor term' ㅣ epsilon
 
-factor → ( expression ) ㅣ value ㅣ Identifier factor'
-factor' → ++ ㅣ -- ㅣ epsilon
+factor → ( expression ) ㅣ value ㅣ Identifier call_stmt
+call_stmt → call
+#ㅣ factor'
+factor' → ++ ㅣ -- ㅣ var_assignment ㅣ epsilon
+
+var_assignment → array_brackets RHS
+RHS → = expression ; ㅣ += expression ; ㅣ -= expression ; ㅣ *= expression ; ㅣ /= expression ; ㅣ epsilon
+array_brackets → [ square_brackets ] 2DAㅣ epsilon
 # ------------------------
 
-call → Identifier ( args )
+call → ( args ) ;
 
 args → arg_list ㅣ epsilon
 
-arg_list → expression arg_list'
-arg_list' → , expression arg_list' ㅣ epsilon
+arg_list → arg_value arg_list'
+arg_list' → , arg_value arg_list' ㅣ epsilon
+
+arg_value → value ㅣ Identifier
 

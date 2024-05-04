@@ -43,7 +43,7 @@ public class AnalysisTable {
         Stack<String> stack = new Stack<>();
         stack.push("$");
         stack.push(grammar.getStartSymbol());
-        System.out.println(stack.size());
+//        System.out.println(stack.size());
         while (!stack.isEmpty()) {
             row = new String[4];
             row[0] = string(stack);
@@ -141,7 +141,7 @@ public class AnalysisTable {
     }
 
     private boolean isTerminal(String symbol) {
-        System.out.println("Symbol: " + symbol);
+//        System.out.println("Symbol: " + symbol);
         return grammar.containsTerminal(symbol);
     }
 

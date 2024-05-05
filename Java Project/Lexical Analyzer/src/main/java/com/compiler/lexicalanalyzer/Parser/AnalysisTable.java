@@ -20,7 +20,7 @@ public class AnalysisTable {
         grammar = new Grammar(grammarFile);
         source = PreProcessor.getStrippedSource(sourceFile);
         columnNames = new String[]{"Stack", "Tokens Queue", "Decision", "Observation"};
-        buildTable(new Lexer().initializer("D:\\Semester 6\\Design of Compilers\\Project\\Java Project\\Lexical Analyzer\\src\\main\\java\\com\\compiler\\lexicalanalyzer\\assets\\source.txt"));
+        buildTable(new Lexer().initializer("src/main/java/com/compiler/lexicalanalyzer/assets/source.txt"));
     }
 
     private void buildTable(List<Lexer.Token> tokens) {
@@ -34,6 +34,13 @@ public class AnalysisTable {
             if (token.Tokentype.equals("Keyword") || token.Tokentype.equals("Operator") || token.Tokentype.equals("Punctuation")) {
                 input.add(token.Lexeme);
             } else {
+                if (token.Tokentype.equals("String Literal"))
+                    input.add("String_Literal");
+                else if (token.Tokentype.equals("Char Literal"))
+                    input.add("Char_Literal");
+                else if (token.Tokentype.equals("Long Long")) {
+                    input.add("Long_Long");
+                } else
                 input.add(token.Tokentype);
             }
         }

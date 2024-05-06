@@ -11,8 +11,9 @@
 program → declaration_list
 declaration_list → declaration declaration_list ㅣ epsilon
 
-declaration → type_specifier var_declaration ㅣ fun_declaration
-var_declaration → Identifier var_declaration' var_declaration_list
+declaration → type_specifier declaration' ㅣ SE_declaration
+declaration' →  var_declaration ㅣ fun_declaration
+var_declaration → astrisk Identifier var_declaration' var_declaration_list
 var_declaration' →  [ square_brackets ] array_value ㅣ = assign_rhs ㅣ epsilon
 
 assign_rhs → expression ㅣ Identifier ( args ) semi
@@ -31,11 +32,11 @@ ShortInt → int ㅣ epsilon
 LongType → long LongType2 ㅣ double ㅣ int ㅣ epsilon
 LongType2 → int ㅣ epsilon
 
-fun_declaration → type_specifier Identifier ( params ) compound_stmt
+fun_declaration → Identifier ( params ) compound_stmt
 params → param_list ㅣ epsilon
 param_list → param param_list'
 param_list' → , param param_list' ㅣ epsilon
-param → type_specifier Identifier param'
+param → type_specifier astrisk Identifier param'
 param' → [ ] 2DAㅣ epsilon
 2DA → [ square_brackets ] ㅣ epsilon
 
@@ -55,11 +56,19 @@ statement_list → statement statement_list'
 
 statement_list' → statement statement_list' ㅣ epsilon
 
+#Grammar Rules for Enums and Structs and unions
+SE_declaration → enum SE_name { enum_list } SE_name2 ; ㅣ struct SE_name { SU_list } SE_name2 ; ㅣ union SE_name { SU_list } SE_name2 ;
+SE_name → Identifier ㅣ epsilon
+SE_name2 → Identifier ㅣ epsilon
+enum_list → Identifier enum_list'
+enum_list' → , Identifier enum_list' ㅣ epsilon
+SU_list → type_specifier Identifier SU_array ; SU_list ㅣ epsilon
+SU_array →  [ square_brackets ]ㅣ epsilon
 # ------------------------
 
 # SELECTION STATEMENTS
 
-selection_stmt → if ( expression ) expression_stmt else_part
+selection_stmt → if ( expression ) expression_stmt else_part ㅣ switch ( Identifier ) { case_switch }
 
 expression_stmt → compound_stmt ㅣ single_stmt
 
@@ -68,6 +77,11 @@ expression_stmt → compound_stmt ㅣ single_stmt
 single_stmt → expression ㅣ type_specifier var_declaration
 
 else_part → else expression_stmt ㅣ epsilon
+
+case_switch → case_or_def case_switch' case_switch ㅣ epsilon
+case_or_def → case case_type : ㅣ default :
+case_type → Integer ㅣ Identifier
+case_switch' → expression case_switch' ㅣ break ;
 
 # ------------------------
 
@@ -119,7 +133,12 @@ term → factor term'
 
 term' → * factor term' ㅣ / factor term' ㅣ epsilon
 
-factor → ( expression ) ㅣ value ㅣ ++ Identifier factor' ㅣ -- Identifier factor' ㅣ Identifier factor'
+factor → ( expression ) ㅣ value ㅣ ++ Identifier factor' ㅣ -- Identifier factor' ㅣ * Identifier factor' ㅣ & Identifier factor' ㅣ ! Identifier factor' ㅣ -> Identifier factor' ㅣ Identifier factor'
+
+#tflee2a → expression ㅣ type_specifier
+#cast → Identifier
+#ep → epsilon
+
 factor' → var_assignment ㅣ ++ ㅣ -- ㅣ ( args ) ;
 semi →  ; ㅣ epsilon
 inc_dec → ++ ㅣ -- ㅣ epsilon
@@ -138,5 +157,6 @@ array_brackets → [ square_brackets ] 2DAㅣ epsilon
 args → arg_list ㅣ epsilon
 arg_list → arg_value arg_list'
 arg_list' → , arg_value arg_list' ㅣ epsilon
-arg_value → value ㅣ Identifier func_call2
+arg_value → value ㅣ astrisk Identifier func_call2
+astrisk →  * ㅣ & ㅣ epsilon
 func_call2 → ( args ) ㅣ epsilon

@@ -12,6 +12,8 @@
    with nested single-line // comments */
 
 //struct, union and  enum
+typedef struct PointStruct Point;
+Point p1; Point p2;
 
 enum  {
   KEYWORD,
@@ -22,8 +24,7 @@ enum  {
   EOF_TOKEN
 } TokenType;
 
-typedef struct PointStruct Point;
-Point p1; Point p2;
+
 
 union {
     int intValue;

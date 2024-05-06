@@ -1,34 +1,71 @@
-void hamada(){
-for(int i = 0; i < 10; i++)
-    int x = 0;
+//enum  {
+  //KEYWORD,
+ // IDENTIFIER,
+ // INTEGER,
+ // OPERATOR,
+ // SEMICOLON,
+ // EOF_TOKEN
+//} TokenType;
+//union {
+//    int intValue;
+//    float floatValue;
+//    char charValue;
+//}MyVariant;
+//
+//struct Address {
+//  char street[100];
+//  char city[50];
+//  int zipcode;
+//};
+//void hamada(){
+//for(int i = 0; i < 10; i++)
+//    int x = 0;
+//}
+ void print_message(char* message,char& message){
+      char* get_name;
+      switch(x){
+        case 1:
+            &y = *x;
+            break;
+      }
+      if(!x){
+        int x = 0;
+      }
+      else{
+        int x = 1;
+      }
+      ptr = &val;
+
 }
 int main(){
-int x;
-
-while(x){
-int x = 0;
-char a = 'a';
-hamada(y,2,sum());
-
+ // double doublewoh = (double) int0;
 }
-if(x++)
-int hamada = 0;
-else
-int hamada = 1;
-return 0;
-}
-long long int power(int a, int b) {
-hamada(y,2,sum());
-
-int x = sum();
-
-    int fortytwo = 0x2A, int0 = 0b0, int1 = 0b1, int2 = 02;
-    do { int0 += int1++ + int2; } while (--fortytwo > 1);
-    //double doublewoh =  int0/*hi there*// (int1 += int2); //BLOBLEM HEEREE dont forget the casting (double)
-
-    long long int result = 1;
-    for (int i = 0; i < b; i++) {
-        result *= a;
-    }
-    return result;
-}
+//int x;
+//
+//while(x){
+//int x = 0;
+//char a = 'a';
+//hamada(y,2,sum());
+//
+//}
+//if(x++)
+//int hamada = 0;
+//else
+//int hamada = 1;
+//return 0;
+//}
+//long long int power(int a, int b) {
+//hamada(y,2,sum());
+//printf("hello");
+//int x = sum();
+//
+//    int fortytwo = 0x2A, int0 = 0b0, int1 = 0b1, int2 = 02;
+//    do { int0 += int1++ + int2; } while (--fortytwo > 1);
+//    //double doublewoh =  int0/*hi there*// (int1 += int2); //BLOBLEM HEEREE dont forget the casting (double)
+//
+//    long long int result = 1;
+//    for (int i = 0; i < b; i++) {
+//        result *= a;
+//    }
+ //   return result;
+//}

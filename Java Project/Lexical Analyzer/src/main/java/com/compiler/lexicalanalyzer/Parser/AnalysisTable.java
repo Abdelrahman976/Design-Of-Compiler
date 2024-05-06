@@ -1,6 +1,8 @@
 package com.compiler.lexicalanalyzer.Parser;
 
 import com.compiler.lexicalanalyzer.LexicalAnalyzer;
+import org.abego.treelayout.demo.TextInBox;
+import org.abego.treelayout.util.DefaultTreeForTreeLayout;
 
 import java.io.File;
 import java.util.*;
@@ -13,6 +15,7 @@ public class AnalysisTable {
     private String[] columnNames;
     private Deque<String[]> table;
     private boolean complete;
+    public DefaultTreeForTreeLayout<TextInBox> tree;
 
     public AnalysisTable(File grammarFile, File sourceFile) {
         this.grammarFile = grammarFile;
@@ -50,6 +53,19 @@ public class AnalysisTable {
         Stack<String> stack = new Stack<>();
         stack.push("$");
         stack.push(grammar.getStartSymbol());
+
+        var nodeStack = new Stack<>();
+
+        // Create a TextInBox object for the root of your tree
+        TextInBox root = new TextInBox(grammar.getStartSymbol(), 80, 20);
+
+        // Create a DefaultTreeForTreeLayout object with the root
+         tree = new DefaultTreeForTreeLayout<>(root);
+
+        // Push the root node onto the node stack
+        nodeStack.push(root);
+        TextInBox parentNode = (TextInBox) nodeStack.peek(); // Keep track of the parent node
+        var childrenStack = new Stack<>(); // Stack to store children nodes
 //        System.out.println(stack.size());
         while (!stack.isEmpty()) {
             row = new String[4];
@@ -99,7 +115,6 @@ public class AnalysisTable {
                     return;
                 }
                 var production = predictiveTable.get(front).get(top);
-//                System.out.println(front+"aaaaaaaaaaaaaaaaaaaaaa");
                 if (production == null) {
                     row[2] = "Syntax Error";
                     row[3] = "Invalid Syntax";
@@ -107,14 +122,51 @@ public class AnalysisTable {
                     return;
                 }
                 var symbols = production.getSymbols();
+                while (!childrenStack.isEmpty()) {
+                    TextInBox potentialParent = (TextInBox) childrenStack.pop();
+                    // If the potential parent has a non-epsilon production, update the parent node
+                    if (!Objects.equals(row[3], "epsilon")) {
+                        parentNode = potentialParent;
+                        break; // Exit the loop once a suitable parent is found
+                    }
+                }
                 if (!symbols.get(0).equals(grammar.getEmptySymbol())) {
                     Stack<String> temp = new Stack<>();
                     for (var symbol : symbols)
                         temp.push(symbol);
-                    while (!temp.isEmpty())
-                        stack.push(temp.pop());
-                }
 
+                    Stack<String> tempReverse = (Stack<String>) temp.clone();
+                    Collections.reverse(tempReverse);
+                    while (!temp.isEmpty()) {
+                        String symbol = temp.pop();
+                        stack.push(symbol);
+
+                        //String symbol2 = tempReverse.pop();
+                        // Create a TextInBox object with the symbol
+                        TextInBox node = new TextInBox(symbol, symbol.length() * 10, 20);
+
+                        // Add this object as a child to the parent node
+                        tree.addChild(parentNode, node);
+
+                        // If the symbol has a production, update the parent node
+                        if (grammar.getNonTerminals().contains(symbol)) {
+                            childrenStack.push(node); // Update the parent node
+                        }
+                        // Push the new node onto the node stack
+                        nodeStack.push(node);
+                    }
+
+                }
+                if (symbols.get(0).equals(grammar.getEmptySymbol())) {
+                    // Create a TextInBox object with the epsilon symbol
+                    TextInBox epsilonNode = new TextInBox("ε", 20, 20);
+
+                    // Add the epsilon node as a child to the parent node
+                    tree.addChild(parentNode, epsilonNode);
+
+                    // Push the epsilon node onto the node stack
+                    nodeStack.push(epsilonNode);
+                }
                 row[2] = "Production";
                 row[3] = symbols.toString().replaceAll("[\\[,\\]]", "");
             }

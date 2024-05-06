@@ -1,25 +1,34 @@
 package com.compiler.lexicalanalyzer;
 
+import com.compiler.lexicalanalyzer.Parser.AnalysisTable;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -44,6 +53,9 @@ public class CompilerController implements Initializable {
     private AnchorPane viewWindow;
     @FXML
     private VBox infoBox;
+    @FXML
+    private Stage parserStage;
+
 
     @FXML
     void readCode(MouseEvent event) {
@@ -108,6 +120,7 @@ public class CompilerController implements Initializable {
         tokensTable.minHeightProperty().bind(stage.heightProperty().divide(2));
         tokensTable.getStyleClass().add("table-view");
         tokensTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        tokensTable.setClip(roundedListview(tokensTable));
         TableColumn<LexicalAnalyzer.Token, String> lexemeCol = new TableColumn<>(type);
         lexemeCol.setCellValueFactory(new PropertyValueFactory<>("Lexeme"));
         colFactory(lexemeCol,true);
@@ -183,6 +196,7 @@ public class CompilerController implements Initializable {
     }
     private TableView<LexicalAnalyzer.SymbolTable> createSymbolTable(){
         TableView<LexicalAnalyzer.SymbolTable> symbolTable = new TableView<>();
+        symbolTable.setClip(roundedListview(symbolTable));
         VBox.setVgrow(symbolTable, Priority.ALWAYS);
         symbolTable.getStyleClass().add("table-view");
         symbolTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
@@ -275,11 +289,11 @@ public class CompilerController implements Initializable {
                                 param.setMinWidth(maxWidth * 2.5);
                                 param.setMaxWidth(maxWidth * 2.5);
                             } else if (maxWidth < headerWidth) {
-                                param.setMinWidth(headerWidth * 1.7);
-                                param.setMaxWidth(headerWidth * 1.7);
+                                param.setMinWidth(headerWidth * 1.9);
+                                param.setMaxWidth(headerWidth * 1.9);
                             } else {
-                                param.setMinWidth(maxWidth * 1.5); // Add some padding
-                                param.setMaxWidth(maxWidth * 1.5); // Add some padding
+                                param.setMinWidth(maxWidth * 1.7); // Add some padding
+                                param.setMaxWidth(maxWidth * 1.7); // Add some padding
                             }
                         }
                     }
@@ -296,7 +310,31 @@ public class CompilerController implements Initializable {
         col.setSortable(false);
     }
     @FXML
-    void parseCode(MouseEvent event) {}
+    void parseCode(MouseEvent event) {
+        if (parserStage != null && parserStage.isShowing())
+            return;
+        try {
+            parserStage = new Stage();
+            parserStage.setMinHeight(660);
+            parserStage.setMinWidth(960);
+            FXMLLoader fxmlLoader = new FXMLLoader(CompilerApplication.class.getResource("Parser.fxml"));
+            parserStage.getIcons().add(new Image(Objects.requireNonNull(CompilerApplication.class.getResourceAsStream("Clanguage.png"))));
+            Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+            parserStage.setTitle("C Parser");
+            parserStage.setScene(scene);
+            parserStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public Rectangle roundedListview(TableView table){
+        Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(table.widthProperty());
+        clip.heightProperty().bind(table.heightProperty());
+        clip.setArcHeight(20);
+        clip.setArcWidth(20);
+        return clip;
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         fileChooser.setInitialDirectory(new File("../../TestCases"));

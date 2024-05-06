@@ -1,34 +1,34 @@
-void hamada(){
-for(int i = 0; i < 10; i++)
-    int x = 0;
-}
+//void hamada(){
+//for(int i = 0; i < 10; i++)
+//    int x = 0;
+//}
 int main(){
 int x;
 
-while(x){
-int x = 0;
-char a = 'a';
-hamada(y,2,sum());
-
-}
-if(x++)
-int hamada = 0;
-else
-int hamada = 1;
+//while(x){
+//int x = 0;
+//char a = 'a';
+//hamada(y,2,sum());
+//
+//}
+//if(x++)
+//int hamada = 0;
+//else
+//int hamada = 1;
 return 0;
 }
-long long int power(int a, int b) {
-hamada(y,2,sum());
-
-int x = sum();
-
-    int fortytwo = 0x2A, int0 = 0b0, int1 = 0b1, int2 = 02;
-    do { int0 += int1++ + int2; } while (--fortytwo > 1);
-    //double doublewoh =  int0/*hi there*// (int1 += int2); //BLOBLEM HEEREE dont forget the casting (double)
-
-    long long int result = 1;
-    for (int i = 0; i < b; i++) {
-        result *= a;
-    }
-    return result;
-}
+//long long int power(int a, int b) {
+//hamada(y,2,sum());
+//
+//int x = sum();
+//
+//    int fortytwo = 0x2A, int0 = 0b0, int1 = 0b1, int2 = 02;
+//    do { int0 += int1++ + int2; } while (--fortytwo > 1);
+//    //double doublewoh =  int0/*hi there*// (int1 += int2); //BLOBLEM HEEREE dont forget the casting (double)
+//
+//    long long int result = 1;
+//    for (int i = 0; i < b; i++) {
+//        result *= a;
+//    }
+//    return result;
+//}

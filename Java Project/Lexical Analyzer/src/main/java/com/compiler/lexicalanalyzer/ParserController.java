@@ -41,37 +41,41 @@ public class ParserController implements Initializable  {
 
     @FXML
     private TableView<String[]> parseTable;
+    JFrame frame= new JFrame();
     AnalysisTable analysisTable = new AnalysisTable(new File("src/main/java/com/compiler/lexicalanalyzer/assets/grammar.txt"),new File("src/main/java/com/compiler/lexicalanalyzer/assets/source.txt"));
 
     @FXML
     void showParseTree(MouseEvent event){
-        try {
-            // Assuming analysisTable is your AnalysisTable object
-            Deque<String[]> tableData = analysisTable.getTable();
+        if(frame.isVisible()){
+            new Alert("Info","Parse Tree Window Already Opened!", "blue");
+        } else {
+            try {
+                // Assuming analysisTable is your AnalysisTable object
+                Deque<String[]> tableData = analysisTable.getTable();
 //             Create a TreeLayout object
-            TreeLayout<TextInBox> treeLayout = new TreeLayout<>(analysisTable.tree, new TextInBoxNodeExtentProvider(), new DefaultConfiguration<>(40, 30));
+                TreeLayout<TextInBox> treeLayout = new TreeLayout<>(analysisTable.tree, new TextInBoxNodeExtentProvider(), new DefaultConfiguration<>(60, 40));
 
-            // Create a TextInBoxTreePane object and set the box visible
-            TextInBoxTreePane panel = new TextInBoxTreePane(treeLayout);
-            panel.setBoxVisible(true);
-            JFrame frame = new JFrame();
-            Container contentPane = frame.getContentPane();
-            ((JComponent) contentPane).setBorder(BorderFactory.createEmptyBorder(
-                    10, 10, 10, 10));
+                // Create a TextInBoxTreePane object and set the box visible
+                TextInBoxTreePane panel = new TextInBoxTreePane(treeLayout);
+                panel.setBoxVisible(true);
 
-            JScrollPane scrollPane = new JScrollPane(panel);
-            scrollPane.setPreferredSize(new Dimension(1280, 720));
-            contentPane.add(scrollPane);
-            frame.setTitle("Parse Tree");
-            frame.setIconImage(Toolkit.getDefaultToolkit().getImage("src/main/resources/com/compiler/lexicalanalyzer/Clanguage.png"));
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-
-        }catch (Exception e){
-            e.printStackTrace();
+                Container contentPane = frame.getContentPane();
+                ((JComponent) contentPane).setBorder(BorderFactory.createEmptyBorder(
+                        10, 10, 10, 10));
+                JScrollPane scrollPane = new JScrollPane(panel);
+                scrollPane.setPreferredSize(new Dimension(1280, 720));
+                scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+                scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+                contentPane.add(scrollPane);
+                frame.setTitle("Parse Tree");
+                frame.setIconImage(Toolkit.getDefaultToolkit().getImage("src/main/resources/com/compiler/lexicalanalyzer/Clanguage.png"));
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
     }
     public Rectangle roundedListview(){
         Rectangle clip = new Rectangle();
@@ -153,6 +157,4 @@ public class ParserController implements Initializable  {
         parseTable.setItems(data);
         parseTable.setClip(roundedListview());
     }
-
-
 }

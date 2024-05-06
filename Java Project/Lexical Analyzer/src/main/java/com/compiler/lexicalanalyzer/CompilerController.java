@@ -311,8 +311,10 @@ public class CompilerController implements Initializable {
     }
     @FXML
     void parseCode(MouseEvent event) {
-        if (parserStage != null && parserStage.isShowing())
+        if (parserStage != null && parserStage.isShowing()){
+            new Alert("Info","Parse Table Window Already Open!", "blue");
             return;
+        }
         try {
             parserStage = new Stage();
             parserStage.setMinHeight(660);

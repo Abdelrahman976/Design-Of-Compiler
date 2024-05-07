@@ -1,5 +1,7 @@
 package com.compiler.lexicalanalyzer.Parser;
 
+import com.compiler.lexicalanalyzer.CompilerController;
+
 public class Reporter {
     private AnalysisTable analysisTable;
 
@@ -47,7 +49,7 @@ public class Reporter {
         var totalWidth = getTotalWidth(columnSizes);
 
         tableHeader += "┏" + "━".repeat(totalWidth - 2) + "┓\n";
-        var tableTitle = "Analysis Table for Expression: \"" + analysisTable.getSource() + "\"";
+        var tableTitle = "Analysis Table for Expression: \"" + CompilerController.file.getAbsolutePath() + "\"";
         var leftPadding = " ".repeat((totalWidth - 6 - tableTitle.length()) / 2);
         var rightPadding = " ".repeat(totalWidth - 6 - leftPadding.length() - tableTitle.length());
         tableHeader += "┃  " + leftPadding + tableTitle + rightPadding + "  ┃\n";
@@ -109,7 +111,7 @@ public class Reporter {
     }
 
     public String expressionStatement() {
-        var expression = analysisTable.getSource();
+        var expression = CompilerController.file.getAbsolutePath();
         var expressionStatus = analysisTable.isComplete() ? "ACCEPTED."
                 : "REJECTED! (" + analysisTable.getTable().getLast()[2]
                 + ": " + analysisTable.getTable().getLast()[3] + ")";

@@ -1,4 +1,6 @@
 package   com.compiler.lexicalanalyzer.Parser;
+import com.compiler.lexicalanalyzer.CompilerController;
+
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -147,7 +149,7 @@ public class GUI {
     private void displayTable() {
         analysisTable = new AnalysisTable(grammarFile, sourceFile);
 
-        tableTitle.setText("Analysis Table for Expression: \"" + analysisTable.getSource() + "\"");
+        tableTitle.setText("Analysis Table for Expression: \"" + CompilerController.file.getAbsolutePath() + "\"");
 
         var tableModel = new DefaultTableModel(tableData(analysisTable), analysisTable.getColumnNames());
         table.setModel(tableModel);

@@ -1,12 +1,8 @@
 package com.compiler.lexicalanalyzer;
 
-import com.compiler.lexicalanalyzer.Parser.AnalysisTable;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -41,7 +37,7 @@ public class CompilerController implements Initializable {
 
     FileChooser fileChooser = new FileChooser();
     LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
-    File file;
+    public static File file;
     File previousFile = null;
     @FXML
     private TextArea codeArea;
@@ -56,13 +52,12 @@ public class CompilerController implements Initializable {
     @FXML
     private Stage parserStage;
 
-
     @FXML
     void readCode(MouseEvent event) {
         file = fileChooser.showOpenDialog(new Stage());
         if (file != null){
-            previousFile = file;}
-        else if(previousFile == null){
+            previousFile = file;
+        }else if(previousFile == null){
             codeArea.setScrollTop(0);
             return;
         }
@@ -311,22 +306,24 @@ public class CompilerController implements Initializable {
     }
     @FXML
     void parseCode(MouseEvent event) {
-        if (parserStage != null && parserStage.isShowing()){
+        if (file == null)
+            new Alert("Error","Please select a file to parse!", "red");
+        else if (parserStage != null && parserStage.isShowing()){
             new Alert("Info","Parse Table Window Already Open!", "blue");
-            return;
-        }
-        try {
-            parserStage = new Stage();
-            parserStage.setMinHeight(660);
-            parserStage.setMinWidth(960);
-            FXMLLoader fxmlLoader = new FXMLLoader(CompilerApplication.class.getResource("Parser.fxml"));
-            parserStage.getIcons().add(new Image(Objects.requireNonNull(CompilerApplication.class.getResourceAsStream("Clanguage.png"))));
-            Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
-            parserStage.setTitle("C Parser");
-            parserStage.setScene(scene);
-            parserStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }else {
+            try {
+                parserStage = new Stage();
+                parserStage.setMinHeight(660);
+                parserStage.setMinWidth(960);
+                FXMLLoader fxmlLoader = new FXMLLoader(CompilerApplication.class.getResource("Parser.fxml"));
+                parserStage.getIcons().add(new Image(Objects.requireNonNull(CompilerApplication.class.getResourceAsStream("Clanguage.png"))));
+                Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+                parserStage.setTitle("C Parser");
+                parserStage.setScene(scene);
+                parserStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     public Rectangle roundedListview(TableView table){

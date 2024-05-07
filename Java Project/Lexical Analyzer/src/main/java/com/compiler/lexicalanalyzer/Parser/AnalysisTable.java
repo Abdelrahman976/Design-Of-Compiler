@@ -1,6 +1,6 @@
 package com.compiler.lexicalanalyzer.Parser;
 
-import com.compiler.lexicalanalyzer.LexicalAnalyzer;
+
 import org.abego.treelayout.demo.TextInBox;
 import org.abego.treelayout.util.DefaultTreeForTreeLayout;
 
@@ -11,7 +11,6 @@ public class AnalysisTable {
     private File grammarFile;
     private File sourceFile;
     private Grammar grammar;
-    private String source;
     private String[] columnNames;
     private Deque<String[]> table;
     private boolean complete;
@@ -21,9 +20,8 @@ public class AnalysisTable {
         this.grammarFile = grammarFile;
         this.sourceFile = sourceFile;
         grammar = new Grammar(grammarFile);
-        source = PreProcessor.getStrippedSource(sourceFile);
         columnNames = new String[]{"Stack", "Tokens Queue", "Decision", "Observation"};
-        buildTable(new Lexer().initializer("src/main/java/com/compiler/lexicalanalyzer/assets/source.txt"));
+        buildTable(new Lexer().initializer(sourceFile.getAbsolutePath()));
     }
 
     private void buildTable(List<Lexer.Token> tokens) {
@@ -66,7 +64,6 @@ public class AnalysisTable {
         nodeStack.push(root);
         TextInBox parentNode = (TextInBox) nodeStack.peek(); // Keep track of the parent node
         var childrenStack = new Stack<>(); // Stack to store children nodes
-//        System.out.println(stack.size());
         while (!stack.isEmpty()) {
             row = new String[4];
             row[0] = string(stack);
@@ -173,10 +170,6 @@ public class AnalysisTable {
             table.add(row);
         }
         complete = true;
-    }
-
-    public String getSource() {
-        return source;
     }
 
     public Deque<String[]> getTable() {

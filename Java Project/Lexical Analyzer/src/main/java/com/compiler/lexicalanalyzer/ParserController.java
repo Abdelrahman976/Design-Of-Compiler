@@ -1,48 +1,31 @@
 package com.compiler.lexicalanalyzer;
 
 import com.compiler.lexicalanalyzer.Parser.AnalysisTable;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.control.skin.TableHeaderRow;
-import javafx.scene.control.skin.TableViewSkin;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import org.abego.treelayout.TreeLayout;
 import org.abego.treelayout.demo.TextInBox;
 import org.abego.treelayout.demo.TextInBoxNodeExtentProvider;
 import org.abego.treelayout.demo.swing.TextInBoxTreePane;
 import org.abego.treelayout.util.DefaultConfiguration;
-import org.abego.treelayout.util.DefaultTreeForTreeLayout;
-import org.abego.treelayout.util.FixedNodeExtentProvider;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
-
 public class ParserController implements Initializable  {
-
     @FXML
     private TableView<String[]> parseTable;
     JFrame frame= new JFrame();
-    AnalysisTable analysisTable = new AnalysisTable(new File("src/main/java/com/compiler/lexicalanalyzer/assets/grammar.txt"),new File("src/main/java/com/compiler/lexicalanalyzer/assets/source.txt"));
+    AnalysisTable analysisTable = new AnalysisTable(new File("src/main/java/com/compiler/lexicalanalyzer/assets/grammar.txt"),CompilerController.file);
 
     @FXML
     void showParseTree(MouseEvent event){
@@ -52,7 +35,7 @@ public class ParserController implements Initializable  {
             try {
                 // Assuming analysisTable is your AnalysisTable object
                 Deque<String[]> tableData = analysisTable.getTable();
-//             Create a TreeLayout object
+                // Create a TreeLayout object
                 TreeLayout<TextInBox> treeLayout = new TreeLayout<>(analysisTable.tree, new TextInBoxNodeExtentProvider(), new DefaultConfiguration<>(60, 40));
 
                 // Create a TextInBoxTreePane object and set the box visible
@@ -123,7 +106,7 @@ public class ParserController implements Initializable  {
             }
         });
 
-            // Add the CSS class to the header
+        // Add the CSS class to the header
         stackColumn.getStyleClass().addAll("stack-col","label");
 
 
